@@ -1,4 +1,5 @@
 let users = require('../../bd/users');
+let tasks = require('../../bd/tasks');
 const User = require('./user.model');
 
 const getUsers = (req, res) => {
@@ -13,7 +14,8 @@ const getUser = (req, res) => {
 
 const addUser = (req, res) => {
   const newUser = new User(req.body);
-  users.push(newUser);
+  users = [...users, newUser];
+  // users.push(newUser);
   res.code(201).send(newUser);
 };
 
@@ -37,11 +39,35 @@ const putUser = (req, res) => {
 };
 
 const deleteUsers = (req, res) => {
-  const { userId } = req.params;
+  const idUser = req.params.userId;
+  const indexUser = users.findIndex((u) => u.id === idUser);
 
-  users = users.filter((user) => user.id !== userId);
+  // todo-------------------------------------------
+  console.log(indexUser);
+  if (indexUser !== -1) {
+    users.splice(indexUser, 1);
 
-  res.send({ message: `User ${userId} has been removed` });
+    tasks = tasks.map((t) =>
+      t.userId === idUser ? { ...t, userId: null } : t
+    );
+
+    /* const newTasks = tasks.map((t) => {
+      if (t.userId === idUser) {
+        // const newT = { ...t, userId: null };
+        return { ...t, userId: null };
+      }
+      return t;
+    }); */
+
+    // tasks = [...newTasks];
+
+    // todo-------------------------------------------
+
+    res.send({ message: `User ${idUser} has been removed` });
+  } else {
+    res.status(404).send(`User ${idUser} is not found`);
+  }
+  console.log(tasks);
 };
 
 module.exports = { getUsers, getUser, addUser, deleteUsers, putUser };

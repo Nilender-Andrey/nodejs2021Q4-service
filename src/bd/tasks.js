@@ -4,8 +4,8 @@ module.exports = [
     titleTask: 'title',
     order: 'order',
     descriptionTask: 'description',
-    userId: '2',
-    boardId: '2',
+    userId: '1',
+    boardId: '1',
     columnId: '1',
   },
   {
@@ -31,8 +31,20 @@ module.exports = [
     titleTask: 'title_3',
     order: 'order',
     descriptionTask: 'description',
-    userId: '2',
-    boardId: '2',
+    userId: '1',
+    boardId: '1',
     columnId: '5',
   },
 ];
+
+/* 
+{
+ "id": "3",
+  "titleTask": "title_3",
+  "order": "order",
+  "descriptionTask": "description",
+  "userId": "1",
+  "boardId": "1",
+  "columnId": "5",
+} 
+*/
