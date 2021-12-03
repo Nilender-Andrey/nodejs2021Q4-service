@@ -1,3 +1,11 @@
-module.exports = [
-  { id: '1', name: 'USER', login: 'user', password: 'P@55w0rd' },
-];
+let users = [];
+
+function changeBdUsers(newArr) {
+  users = newArr;
+}
+
+function getBdUsers() {
+  return users;
+}
+
+module.exports = { changeBdUsers, getBdUsers };

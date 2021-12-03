@@ -1,14 +1,14 @@
-let boards = require('../../bd/boards');
-// const tasks = require('../../bd/tasks');
+const { changeBdBoards, getBdBoards } = require('../../bd/boards');
+const { changeBdTasks, getBdTasks } = require('../../bd/tasks');
 const Board = require('./boards.model');
 
 const getBoards = (req, res) => {
-  res.send(boards);
+  res.send(getBdBoards());
 };
 
 const getBoard = (req, res) => {
   const { boardId } = req.params;
-  const board = boards.find((b) => b.id === boardId);
+  const board = getBdBoards().find((b) => b.id === boardId);
 
   if (board) {
     res.send(board);
@@ -21,13 +21,13 @@ const addBoard = (req, res) => {
   const { title, columns } = req.body;
   const newBoard = new Board(title, columns);
 
-  boards.push(newBoard);
+  changeBdBoards([...getBdBoards(), newBoard]);
   res.code(201).send(newBoard);
 };
 
 const putBoard = (req, res) => {
   const { boardId } = req.params;
-  const board = boards.find((b) => b.id === boardId);
+  const board = getBdBoards().find((b) => b.id === boardId);
 
   if (board) {
     const { title, columns } = req.body;
@@ -37,7 +37,9 @@ const putBoard = (req, res) => {
       columns: columns || board.columns,
     };
 
-    boards = boards.map((b) => (b.id === boardId ? newBoard : b));
+    changeBdBoards([
+      ...getBdBoards().map((b) => (b.id === boardId ? newBoard : b)),
+    ]);
 
     res.send(newBoard);
   } else {
@@ -47,22 +49,11 @@ const putBoard = (req, res) => {
 
 const deleteBoard = (req, res) => {
   const { boardId } = req.params;
-  const indexBoard = boards.findIndex((b) => b.id === boardId);
+  const indexBoard = getBdBoards().findIndex((b) => b.id === boardId);
 
   if (indexBoard !== -1) {
-    boards.splice(indexBoard, 1);
-
-    // todo----1v
-    // tasks = tasks.map((t) =>
-    //   t.userId === idUser ? { ...t, userId: null } : t
-    // );
-
-    // todo----2v
-    // tasks.forEach((t, index, array) => {
-    //   if (t.boardId === boardId) {
-    //     array.splice(index, 1);
-    //   }
-    // });
+    changeBdBoards(getBdBoards().filter((b) => b.id !== boardId));
+    changeBdTasks(getBdTasks().filter((t) => t.boardId !== boardId));
 
     res.send({ message: `Board ${boardId} has been removed` });
   } else {

@@ -11,12 +11,12 @@ const getTaskSсhema = {
   type: 'object',
   properties: {
     id: { type: 'string' },
-    titleTask: { type: 'string' },
-    order: { type: 'string' },
-    descriptionTask: { type: 'string' },
-    userId: { type: 'string' },
+    title: { type: 'string' },
+    order: { type: 'number' },
+    description: { type: 'string' },
+    userId: { type: ['string', 'null'] },
     boardId: { type: 'string' },
-    columnId: { type: 'string' },
+    columnId: { type: ['string', 'null'] },
   },
 };
 
@@ -46,26 +46,26 @@ const getTaskOpts = {
 // options for create task
 const postTaskOpts = {
   schema: {
-    body: {
+    /*  body: {
       type: 'object',
-      required: ['title', 'order', 'description', 'userId'], // 'columnId'
+      required: ['title', 'order', 'description', 'userId', 'columnId'], // 'columnId'
       titleTask: { type: 'string' },
-      order: { type: 'string' },
+      order: { type: 'number' },
       descriptionTask: { type: 'string' },
-      userId: { type: 'string' },
-      // columnId: { type: 'string' },
-    },
+      userId: { type: ['string', 'null'] },
+      columnId: { type: ['string', 'null'] },
+    }, */
     response: {
       201: {
         type: 'object',
         properties: {
           id: { type: 'string' },
-          titleTask: { type: 'string' },
-          order: { type: 'string' },
-          descriptionTask: { type: 'string' },
-          userId: { type: 'string' },
+          title: { type: 'string' },
+          order: { type: 'number' },
+          description: { type: 'string' },
+          userId: { type: ['string', 'null'] },
           boardId: { type: 'string' },
-          // columnId: { type: 'string' },
+          columnId: { type: ['string', 'null'] },
         },
       },
     },
@@ -98,7 +98,7 @@ const deleteTaskOpts = {
   handler: deleteTasks,
 };
 
-function userRoutes(server, options, done) {
+function taskRoutes(server, options, done) {
   // GET all users
   server.get('/boards/:boardId/tasks', getTasksOpts);
 
@@ -117,4 +117,4 @@ function userRoutes(server, options, done) {
   done();
 }
 
-module.exports = userRoutes;
+module.exports = taskRoutes;

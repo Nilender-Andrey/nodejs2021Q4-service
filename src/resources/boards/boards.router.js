@@ -16,7 +16,7 @@ const boardSсhema = {
       type: 'array',
       items: {
         id: { type: 'string' },
-        order: { type: 'string' },
+        order: { type: 'number' },
         titleCol: { type: 'string' },
       },
     },
@@ -107,7 +107,7 @@ const deleteBoardOpts = {
   handler: deleteBoard,
 };
 
-function userRoutes(server, options, done) {
+function boardRoutes(server, options, done) {
   // GET all boards
   server.get('/boards', getBoardsOpts);
 
@@ -126,4 +126,4 @@ function userRoutes(server, options, done) {
   done();
 }
 
-module.exports = userRoutes;
+module.exports = boardRoutes;
