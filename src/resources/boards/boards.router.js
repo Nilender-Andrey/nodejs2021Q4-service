@@ -52,7 +52,7 @@ const postBoardOpts = {
     body: {
       type: 'object',
       required: ['title', 'columns'],
-      titleTask: { type: 'string' },
+      titleBoard: { type: 'string' },
       columns: {
         type: 'array',
         items: {
@@ -70,7 +70,7 @@ const postBoardOpts = {
           columns: {
             type: 'array',
             items: {
-              // id: { type: 'string' },
+              id: { type: 'string' },
               order: { type: 'number' },
               titleCol: { type: 'string' },
             },
@@ -118,10 +118,10 @@ function userRoutes(server, options, done) {
   server.post('/boards', postBoardOpts);
 
   // PUT one board
-  server.put('/boards/:userId', putBoardOpts);
+  server.put('/boards/:boardId', putBoardOpts);
 
   // DELETE one board
-  server.delete('/boards/:userId', deleteBoardOpts);
+  server.delete('/boards/:boardId', deleteBoardOpts);
 
   done();
 }

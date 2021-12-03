@@ -1,4 +1,5 @@
 let boards = require('../../bd/boards');
+// const tasks = require('../../bd/tasks');
 const Board = require('./boards.model');
 
 const getBoards = (req, res) => {
@@ -8,39 +9,65 @@ const getBoards = (req, res) => {
 const getBoard = (req, res) => {
   const { boardId } = req.params;
   const board = boards.find((b) => b.id === boardId);
-  res.send(board);
+
+  if (board) {
+    res.send(board);
+  } else {
+    res.status(404).send(`Board ${boardId} is not found`);
+  }
 };
 
 const addBoard = (req, res) => {
-  const newBoard = new Board(req.body);
+  const { title, columns } = req.body;
+  const newBoard = new Board(title, columns);
 
-  console.log(req.body);
   boards.push(newBoard);
   res.code(201).send(newBoard);
 };
 
 const putBoard = (req, res) => {
-  const { userId } = req.params;
-  const { title, columns } = req.body;
-  const board = boards.find((u) => u.id === userId);
+  const { boardId } = req.params;
+  const board = boards.find((b) => b.id === boardId);
 
-  const newBoard = {
-    id: board.id,
-    title: title || board.title,
-    columns: columns || board.columns,
-  };
+  if (board) {
+    const { title, columns } = req.body;
+    const newBoard = {
+      id: board.id,
+      title: title || board.title,
+      columns: columns || board.columns,
+    };
 
-  boards = boards.map((u) => (u.id === userId ? newBoard : u));
+    boards = boards.map((b) => (b.id === boardId ? newBoard : b));
 
-  res.send(newBoard);
+    res.send(newBoard);
+  } else {
+    res.status(404).send(`Board ${boardId} is not found`);
+  }
 };
 
 const deleteBoard = (req, res) => {
-  const { userId } = req.params;
+  const { boardId } = req.params;
+  const indexBoard = boards.findIndex((b) => b.id === boardId);
 
-  boards = boards.filter((user) => user.id !== userId);
+  if (indexBoard !== -1) {
+    boards.splice(indexBoard, 1);
 
-  res.send({ message: `Board ${userId} has been removed` });
+    // todo----1v
+    // tasks = tasks.map((t) =>
+    //   t.userId === idUser ? { ...t, userId: null } : t
+    // );
+
+    // todo----2v
+    // tasks.forEach((t, index, array) => {
+    //   if (t.boardId === boardId) {
+    //     array.splice(index, 1);
+    //   }
+    // });
+
+    res.send({ message: `Board ${boardId} has been removed` });
+  } else {
+    res.status(404).send(`Board ${boardId} is not found`);
+  }
 };
 
 module.exports = { getBoards, getBoard, addBoard, deleteBoard, putBoard };
