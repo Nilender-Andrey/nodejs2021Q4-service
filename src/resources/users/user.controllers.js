@@ -1,55 +1,65 @@
-const { changeBdUsers, getBdUsers } = require('../../bd/users');
-const { changeBdTasks, getBdTasks } = require('../../bd/tasks');
+const { usersDB } = require('../../bd/users');
+const { tasksDB } = require('../../bd/tasks');
 const User = require('./user.model');
 
 const getUsers = (req, res) => {
-  res.send(getBdUsers());
+  res.send(usersDB.getBd());
 };
 
 const getUser = (req, res) => {
   const { userId } = req.params;
-  const user = getBdUsers().find((u) => u.id === userId);
+  const user = usersDB.findOne('id', userId);
 
-  res.send(user);
+  if (user) {
+    res.send(user);
+  } else {
+    res.status(404).send(`User ${userId} is not found`);
+  }
 };
 
 const addUser = (req, res) => {
   const newUser = new User(req.body);
+  usersDB.add(newUser);
 
-  changeBdUsers([...getBdUsers(), newUser]);
   res.code(201).send(newUser);
 };
 
 const putUser = (req, res) => {
   const { userId } = req.params;
   const { name, login, password } = req.body;
-  const user = getBdUsers().find((u) => u.id === userId);
-  const newUser = {
-    id: user.id,
-    name: name || user.name,
-    login: login || user.login,
-    password: password || user.password,
-  };
+  const user = usersDB.findOne('id', userId);
 
-  changeBdUsers(getBdUsers().map((u) => (u.id === userId ? newUser : u)));
-  res.send(newUser);
+  if (user) {
+    const newUser = {
+      id: user.id,
+      name: name || user.name,
+      login: login || user.login,
+      password: password || user.password,
+    };
+    usersDB.change('id', userId, newUser);
+
+    res.send(newUser);
+  } else {
+    res.status(404).send(`User ${userId} is not found`);
+  }
 };
 
-const deleteUsers = async (req, res) => {
+const deleteUsers = (req, res) => {
   const { userId } = req.params;
-  const indexUser = getBdUsers().findIndex((u) => u.id === userId);
+  const user = usersDB.findOne('id', userId);
 
-  if (indexUser !== -1) {
-    changeBdUsers(getBdUsers().filter((u) => u.id !== userId));
-    changeBdTasks(
-      getBdTasks().map((t) =>
-        t.userId === userId ? { ...t, userId: null } : t
-      )
-    );
+  if (user) {
+    usersDB.delete('id', userId);
 
-    await res.send({ message: `User ${userId} has been removed` });
+    tasksDB.getBd().forEach((t) => {
+      if (t.userId === userId) {
+        tasksDB.change('userId', userId, { ...t, userId: null });
+      }
+    });
+
+    res.send({ message: `User ${userId} has been removed` });
   } else {
-    await res.status(404).send(`User ${userId} is not found`);
+    res.status(404).send(`User ${userId} is not found`);
   }
 };
 

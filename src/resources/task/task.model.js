@@ -9,7 +9,7 @@ class Task {
     userId = 'userId',
     boardId = 'boardId',
     columnId = null,
-  } = {}) {
+  }) {
     this.id = id;
     this.title = title;
     this.order = order;
@@ -19,10 +19,5 @@ class Task {
     this.columnId = columnId;
   }
 }
-/* static toResponse(user) {
-    const { id, name, login } = user;
-    return { id, name, login };
-  }
-} */
 
 module.exports = Task;

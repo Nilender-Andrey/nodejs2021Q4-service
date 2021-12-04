@@ -1,14 +1,14 @@
-const { changeBdBoards, getBdBoards } = require('../../bd/boards');
-const { changeBdTasks, getBdTasks } = require('../../bd/tasks');
+const { boardsDB } = require('../../bd/boards');
+const { tasksDB } = require('../../bd/tasks');
 const Board = require('./boards.model');
 
 const getBoards = (req, res) => {
-  res.send(getBdBoards());
+  res.send(boardsDB.getBd());
 };
 
 const getBoard = (req, res) => {
   const { boardId } = req.params;
-  const board = getBdBoards().find((b) => b.id === boardId);
+  const board = boardsDB.findOne('id', boardId);
 
   if (board) {
     res.send(board);
@@ -21,13 +21,13 @@ const addBoard = (req, res) => {
   const { title, columns } = req.body;
   const newBoard = new Board(title, columns);
 
-  changeBdBoards([...getBdBoards(), newBoard]);
+  boardsDB.add(newBoard);
   res.code(201).send(newBoard);
 };
 
 const putBoard = (req, res) => {
   const { boardId } = req.params;
-  const board = getBdBoards().find((b) => b.id === boardId);
+  const board = boardsDB.findOne('id', boardId);
 
   if (board) {
     const { title, columns } = req.body;
@@ -37,9 +37,7 @@ const putBoard = (req, res) => {
       columns: columns || board.columns,
     };
 
-    changeBdBoards([
-      ...getBdBoards().map((b) => (b.id === boardId ? newBoard : b)),
-    ]);
+    boardsDB.change('id', boardId, newBoard);
 
     res.send(newBoard);
   } else {
@@ -49,11 +47,11 @@ const putBoard = (req, res) => {
 
 const deleteBoard = (req, res) => {
   const { boardId } = req.params;
-  const indexBoard = getBdBoards().findIndex((b) => b.id === boardId);
+  const board = boardsDB.findOne('id', boardId);
 
-  if (indexBoard !== -1) {
-    changeBdBoards(getBdBoards().filter((b) => b.id !== boardId));
-    changeBdTasks(getBdTasks().filter((t) => t.boardId !== boardId));
+  if (board) {
+    boardsDB.delete('id', boardId);
+    tasksDB.delete('boardId', boardId);
 
     res.send({ message: `Board ${boardId} has been removed` });
   } else {

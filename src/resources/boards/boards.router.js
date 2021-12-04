@@ -39,7 +39,7 @@ const getBoardsOpts = {
     response: {
       200: {
         type: 'array',
-        items: boardSсhema, //!
+        items: boardSсhema,
       },
     },
   },
@@ -62,21 +62,7 @@ const postBoardOpts = {
       },
     },
     response: {
-      201: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          title: { type: 'string' },
-          columns: {
-            type: 'array',
-            items: {
-              id: { type: 'string' },
-              order: { type: 'number' },
-              titleCol: { type: 'string' },
-            },
-          },
-        },
-      },
+      201: boardSсhema,
     },
   },
   handler: addBoard,

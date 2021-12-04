@@ -1,11 +1,6 @@
-let boards = [];
+const RepositoryMaintenance = require('./repository_maintenance');
 
-function changeBdBoards(newArr) {
-  boards = newArr;
-}
+const boards = [];
+const boardsDB = new RepositoryMaintenance(boards);
 
-function getBdBoards() {
-  return boards;
-}
-
-module.exports = { changeBdBoards, getBdBoards };
+module.exports = { boardsDB };

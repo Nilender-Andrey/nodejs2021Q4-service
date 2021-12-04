@@ -56,18 +56,7 @@ const postTaskOpts = {
       columnId: { type: ['string', 'null'] },
     }, */
     response: {
-      201: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          title: { type: 'string' },
-          order: { type: 'number' },
-          description: { type: 'string' },
-          userId: { type: ['string', 'null'] },
-          boardId: { type: 'string' },
-          columnId: { type: ['string', 'null'] },
-        },
-      },
+      201: getTaskSсhema,
     },
   },
   handler: addTask,

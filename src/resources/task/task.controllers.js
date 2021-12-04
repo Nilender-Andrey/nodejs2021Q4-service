@@ -1,20 +1,20 @@
-const { changeBdTasks, getBdTasks } = require('../../bd/tasks');
-const { getBdBoards } = require('../../bd/boards');
+const { tasksDB } = require('../../bd/tasks');
+const { boardsDB } = require('../../bd/boards');
 const Task = require('./task.model');
 
 const getTasks = (req, res) => {
   const { boardId } = req.params;
-  const allTasksInBoard = getBdTasks().filter((t) => t.boardId === boardId);
+  const allTasksInBoard = tasksDB.findAll('boardId', boardId);
 
   res.send(allTasksInBoard);
 };
 
 const getTask = (req, res) => {
   const { boardId, taskId } = req.params;
-  const thereIsSuchBoard = getBdBoards().find((b) => b.id === boardId);
+  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
   if (thereIsSuchBoard) {
-    const allTasksInBoard = getBdTasks().filter((t) => t.boardId === boardId);
+    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
     const task = allTasksInBoard.find((t) => t.id === taskId);
 
     if (task) {
@@ -29,7 +29,7 @@ const getTask = (req, res) => {
 
 const addTask = (req, res) => {
   const { boardId } = req.params;
-  const thereIsSuchBoard = getBdBoards().find((b) => b.id === boardId);
+  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
   if (thereIsSuchBoard) {
     const { title, order, description, userId, columnId } = req.body;
@@ -43,7 +43,7 @@ const addTask = (req, res) => {
     };
     const newTask = new Task(data);
 
-    changeBdTasks([...getBdTasks(), newTask]);
+    tasksDB.add(newTask);
     res.code(201).send(newTask);
   } else {
     res.status(404).send(`Board ${boardId} is not found`);
@@ -52,10 +52,11 @@ const addTask = (req, res) => {
 
 const putTask = (req, res) => {
   const { taskId, boardId } = req.params;
-  const thereIsSuchBoard = getBdBoards().find((b) => b.id === boardId);
+  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
   if (thereIsSuchBoard) {
-    const task = getBdTasks().find((t) => t.id === taskId);
+    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
+    const task = allTasksInBoard.find((t) => t.id === taskId);
 
     if (task) {
       const { title, order, description, userId, columnId } = req.body;
@@ -69,9 +70,7 @@ const putTask = (req, res) => {
         columnId: columnId || task.columnId,
       };
 
-      changeBdTasks([
-        ...getBdTasks().map((t) => (t.id === taskId ? newTask : t)),
-      ]);
+      tasksDB.change('id', taskId, newTask);
 
       res.send(newTask);
     } else {
@@ -84,14 +83,15 @@ const putTask = (req, res) => {
 
 const deleteTasks = (req, res) => {
   const { taskId, boardId } = req.params;
-  const thereIsSuchBoard = getBdBoards().find((b) => b.id === boardId);
+  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
   if (thereIsSuchBoard) {
-    const indexTask = getBdTasks().findIndex((t) => t.id === taskId);
+    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
 
-    if (indexTask !== -1) {
-      changeBdTasks(getBdTasks().filter((t) => t.id !== taskId));
+    const task = allTasksInBoard.find((t) => t.id === taskId);
 
+    if (task) {
+      tasksDB.delete('id', taskId);
       res.send({ message: `task ${taskId} has been removed` });
     } else {
       res.status(404).send(`Task ${taskId} not found in the board ${boardId}`);

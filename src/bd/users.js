@@ -1,11 +1,6 @@
-let users = [];
+const RepositoryMaintenance = require('./repository_maintenance');
 
-function changeBdUsers(newArr) {
-  users = newArr;
-}
+const users = [];
+const usersDB = new RepositoryMaintenance(users);
 
-function getBdUsers() {
-  return users;
-}
-
-module.exports = { changeBdUsers, getBdUsers };
+module.exports = { usersDB };

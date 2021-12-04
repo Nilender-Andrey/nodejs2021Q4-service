@@ -1,11 +1,6 @@
-let tasks = [];
+const RepositoryMaintenance = require('./repository_maintenance');
 
-function changeBdTasks(newArr) {
-  tasks = newArr;
-}
+const tasks = [];
+const tasksDB = new RepositoryMaintenance(tasks);
 
-function getBdTasks() {
-  return tasks;
-}
-
-module.exports = { changeBdTasks, getBdTasks };
+module.exports = { tasksDB };
