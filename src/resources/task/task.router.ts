@@ -1,10 +1,11 @@
-const {
-  getTasks,
-  getTask,
+import * as fp from 'fastify-plugin';
+import {
   addTask,
   deleteTasks,
+  getTask,
+  getTasks,
   putTask,
-} = require('./task.controllers');
+} from './task.controllers';
 
 // task shema
 const getTaskSсhema = {
@@ -106,4 +107,4 @@ function taskRoutes(server, options, done) {
   done();
 }
 
-module.exports = taskRoutes;
+export default taskRoutes;

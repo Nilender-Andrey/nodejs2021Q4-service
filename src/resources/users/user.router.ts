@@ -1,10 +1,11 @@
-const {
-  getUsers,
-  getUser,
+import * as fastify from 'fastify';
+import {
   addUser,
-  putUser,
   deleteUsers,
-} = require('./user.controllers');
+  getUser,
+  getUsers,
+  putUser,
+} from './user.controllers';
 
 // User shema
 const getUserSсhema = {
@@ -17,7 +18,7 @@ const getUserSсhema = {
 };
 
 // options for get one user
-const getUserOpts = {
+const getUserOpts: fastify.RouteShorthandOptions = {
   schema: {
     response: {
       200: getUserSсhema,
@@ -82,7 +83,7 @@ const putUserOpts = {
 };
 
 // options for delete user
-const deleteUserOpts = {
+const deleteUserOpts: fastify.RouteShorthandOptions = {
   schema: {
     response: {
       200: {
@@ -96,7 +97,7 @@ const deleteUserOpts = {
   handler: deleteUsers,
 };
 
-function userRoutes(server, options, done) {
+function userRoutes(server: fastify.FastifyInstance, options, done) {
   // GET all users
   server.get('/users', getUsersOpts);
 
@@ -115,4 +116,5 @@ function userRoutes(server, options, done) {
   done();
 }
 
-module.exports = userRoutes;
+export default userRoutes;
+fastify, opts, next;

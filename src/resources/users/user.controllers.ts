@@ -1,12 +1,14 @@
-const { usersDB } = require('../../bd/users');
-const { tasksDB } = require('../../bd/tasks');
-const User = require('./user.model');
+import { FastifyReply } from 'fastify';
 
-const getUsers = (req, res) => {
+import tasksDB from '../../bd/tasks';
+import usersDB from '../../bd/users';
+import User from './user.model';
+
+const getUsers = (res: FastifyReply) => {
   res.send(usersDB.getBd());
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res: FastifyReply) => {
   const { userId } = req.params;
   const user = usersDB.findOne('id', userId);
 
@@ -17,14 +19,14 @@ const getUser = (req, res) => {
   }
 };
 
-const addUser = (req, res) => {
+const addUser = (req, res: FastifyReply) => {
   const newUser = new User(req.body);
   usersDB.add(newUser);
 
   res.code(201).send(newUser);
 };
 
-const putUser = (req, res) => {
+const putUser = (req, res: FastifyReply) => {
   const { userId } = req.params;
   const { name, login, password } = req.body;
   const user = usersDB.findOne('id', userId);
@@ -44,7 +46,7 @@ const putUser = (req, res) => {
   }
 };
 
-const deleteUsers = (req, res) => {
+const deleteUsers = (req, res: FastifyReply) => {
   const { userId } = req.params;
   const user = usersDB.findOne('id', userId);
 
@@ -52,7 +54,8 @@ const deleteUsers = (req, res) => {
     usersDB.delete('id', userId);
 
     tasksDB.getBd().forEach((t) => {
-      if (t.userId === userId) {
+      if (t.id === userId) {
+        // !
         tasksDB.change('userId', userId, { ...t, userId: null });
       }
     });
@@ -63,4 +66,4 @@ const deleteUsers = (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUser, addUser, deleteUsers, putUser };
+export { getUsers, getUser, addUser, deleteUsers, putUser };

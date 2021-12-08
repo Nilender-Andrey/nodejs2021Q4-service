@@ -1,10 +1,10 @@
-const {
-  getBoards,
-  getBoard,
+import {
   addBoard,
   deleteBoard,
+  getBoard,
+  getBoards,
   putBoard,
-} = require('./boards.controllers');
+} from './boards.controllers';
 
 // Board shema
 const boardSсhema = {
@@ -112,4 +112,4 @@ function boardRoutes(server, options, done) {
   done();
 }
 
-module.exports = boardRoutes;
+export default boardRoutes;

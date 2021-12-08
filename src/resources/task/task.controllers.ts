@@ -1,15 +1,16 @@
-const { tasksDB } = require('../../bd/tasks');
-const { boardsDB } = require('../../bd/boards');
-const Task = require('./task.model');
+import { FastifyReply } from 'fastify';
+import boardsDB from '../../bd/boards';
+import tasksDB from '../../bd/tasks';
+import Task from './task.model';
 
-const getTasks = (req, res) => {
+const getTasks = (req, res: FastifyReply) => {
   const { boardId } = req.params;
   const allTasksInBoard = tasksDB.findAll('boardId', boardId);
 
   res.send(allTasksInBoard);
 };
 
-const getTask = (req, res) => {
+const getTask = (req, res: FastifyReply) => {
   const { boardId, taskId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -27,7 +28,7 @@ const getTask = (req, res) => {
   }
 };
 
-const addTask = (req, res) => {
+const addTask = (req, res: FastifyReply) => {
   const { boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -50,7 +51,7 @@ const addTask = (req, res) => {
   }
 };
 
-const putTask = (req, res) => {
+const putTask = (req, res: FastifyReply) => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -81,7 +82,7 @@ const putTask = (req, res) => {
   }
 };
 
-const deleteTasks = (req, res) => {
+const deleteTasks = (req, res: FastifyReply) => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -101,4 +102,4 @@ const deleteTasks = (req, res) => {
   }
 };
 
-module.exports = { getTasks, getTask, addTask, deleteTasks, putTask };
+export { getTasks, getTask, addTask, deleteTasks, putTask };
