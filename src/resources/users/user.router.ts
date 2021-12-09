@@ -1,4 +1,6 @@
 import * as fastify from 'fastify';
+import { RouteGenericInterface } from 'fastify/types/route';
+import { Server, IncomingMessage, ServerResponse } from 'http';
 import {
   addUser,
   deleteUsers,
@@ -18,7 +20,7 @@ const getUserSсhema = {
 };
 
 // options for get one user
-const getUserOpts: fastify.RouteShorthandOptions = {
+const getUserOpts = {
   schema: {
     response: {
       200: getUserSсhema,
@@ -83,7 +85,7 @@ const putUserOpts = {
 };
 
 // options for delete user
-const deleteUserOpts: fastify.RouteShorthandOptions = {
+const deleteUserOpts = {
   schema: {
     response: {
       200: {
@@ -97,7 +99,7 @@ const deleteUserOpts: fastify.RouteShorthandOptions = {
   handler: deleteUsers,
 };
 
-function userRoutes(server: fastify.FastifyInstance, options, done) {
+function userRoutes(server, options, done) {
   // GET all users
   server.get('/users', getUsersOpts);
 
@@ -117,4 +119,3 @@ function userRoutes(server: fastify.FastifyInstance, options, done) {
 }
 
 export default userRoutes;
-fastify, opts, next;

@@ -1,12 +1,7 @@
-import { IBoard, ITask, IUser } from '../types/types';
+class RepositoryMaintenance<T> {
+  base: T[];
 
-// type T = IUser[] | IBoard[] | ITask[];
-type T = keyof IUser | IBoard | ITask;
-
-class RepositoryMaintenance<T, K extends keyof T> {
-  base: Array<T>;
-
-  constructor(base: Array<T>) {
+  constructor(base: T[]) {
     this.base = base;
   }
 
@@ -14,15 +9,15 @@ class RepositoryMaintenance<T, K extends keyof T> {
     return this.base;
   }
 
-  findOne(property: K, necessary: T[K]) {
-    return this.base.find((item: T) => item[property] === necessary);
+  findOne<P extends keyof T>(prop: P, necessary: T[P]) {
+    return this.base.find((item: T) => item[prop] === necessary);
   }
 
-  findAll<U extends keyof T>(property: U, necessary: string) {
+  findAll<P extends keyof T>(property: P, necessary: T[P]) {
     return this.base.filter((item) => item[property] === necessary);
   }
 
-  findIndex<U extends keyof T>(property: U, necessary: string) {
+  findIndex<P extends keyof T>(property: P, necessary: T[P]) {
     return this.base.findIndex((item) => item[property] === necessary);
   }
 
@@ -30,17 +25,13 @@ class RepositoryMaintenance<T, K extends keyof T> {
     this.base.push(item);
   }
 
-  change<U extends keyof T>(
-    property: U,
-    necessary: string,
-    replacedBy: IBoard | IUser | ITask
-  ) {
+  change<P extends keyof T>(property: P, necessary: T[P], replacedBy: T) {
     const index = this.findIndex(property, necessary);
 
     this.base.splice(index, 1, replacedBy);
   }
 
-  delete<U extends keyof T>(property: U, necessary: string) {
+  delete<P extends keyof T>(property: P, necessary: T[P]) {
     this.base = this.base.filter((item) => item[property] !== necessary);
   }
 }

@@ -1,3 +1,5 @@
+import * as fastify from 'fastify';
+
 import {
   addBoard,
   deleteBoard,
@@ -6,7 +8,6 @@ import {
   putBoard,
 } from './boards.controllers';
 
-// Board shema
 const boardSсhema = {
   type: 'object',
   properties: {
@@ -23,9 +24,14 @@ const boardSсhema = {
   },
 };
 
-// options for get one board
 const getBoardOpts = {
   schema: {
+    params: {
+      type: 'object',
+      properties: {
+        boardId: { type: 'string' },
+      },
+    },
     response: {
       200: boardSсhema,
     },
@@ -33,7 +39,6 @@ const getBoardOpts = {
   handler: getBoard,
 };
 
-// options for get all boards
 const getBoardsOpts = {
   schema: {
     response: {
@@ -46,7 +51,6 @@ const getBoardsOpts = {
   handler: getBoards,
 };
 
-// options for create board
 const postBoardOpts = {
   schema: {
     body: {
@@ -68,7 +72,6 @@ const postBoardOpts = {
   handler: addBoard,
 };
 
-// options for put one board
 const putBoardOpts = {
   schema: {
     response: {
@@ -78,7 +81,6 @@ const putBoardOpts = {
   handler: putBoard,
 };
 
-// options for delete board
 const deleteBoardOpts = {
   schema: {
     response: {
@@ -93,23 +95,46 @@ const deleteBoardOpts = {
   handler: deleteBoard,
 };
 
-function boardRoutes(server, options, done) {
-  // GET all boards
+/* function boardRoutes(server:fastify.FastifyInstance<Server, IncomingMessage, ServerResponse, FastifyLoggerInstance> , options, done:  (error?: fastify.FastifyError) => void) {
   server.get('/boards', getBoardsOpts);
 
-  // GET one board
   server.get('/boards/:boardId', getBoardOpts);
 
-  // POST one board
   server.post('/boards', postBoardOpts);
 
-  // PUT one board
   server.put('/boards/:boardId', putBoardOpts);
 
-  // DELETE one board
   server.delete('/boards/:boardId', deleteBoardOpts);
 
   done();
+} */
+
+interface IParams {
+  boardId: string;
 }
+
+interface IBody {
+  title: string;
+  columns: { order: number; title: string }[];
+}
+
+interface boardRequest {
+  Params: IParams;
+  Body: IBody;
+}
+
+const boardRoutes: fastify.FastifyPluginAsync = async (
+  server
+): Promise<void> => {
+  server.get('/boards', getBoardsOpts);
+
+  server.get<{ Params: IParams }>('/boards/:boardId', getBoardOpts);
+
+  server.post<{ Body: IBody }>('/boards', postBoardOpts);
+
+  server.put<boardRequest>('/boards/:boardId', putBoardOpts);
+
+  server.delete<boardRequest>('/boards/:boardId', deleteBoardOpts);
+};
 
 export default boardRoutes;

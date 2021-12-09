@@ -1,14 +1,14 @@
-import { FastifyReply, RequestGenericInterface } from 'fastify';
+import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
 import boardsDB from '../../bd/boards';
 import tasksDB from '../../bd/tasks';
 import { IBoard } from '../../types/types';
 import Board from './boards.model';
 
-const getBoards = (res: FastifyReply) => {
+const getBoards = (req: FastifyRequest, res: FastifyReply) => {
   res.send(boardsDB.getBd());
 };
 
-interface BoardReqGet extends RequestGenericInterface {
+interface BoardReqGet extends FastifyRequest {
   params: {
     boardId: string;
   };
@@ -29,8 +29,8 @@ const getBoard = (req: BoardReqGet, res: FastifyReply) => {
 
 interface BoardReqAdd extends RequestGenericInterface {
   body: {
-    title?: string;
-    columns?: string;
+    title: string;
+    columns: { order: number; title: string }[];
   };
 }
 
@@ -47,8 +47,8 @@ interface BoardReqPut extends RequestGenericInterface {
     boardId: string;
   };
   body: {
-    title?: string;
-    columns?: string;
+    title: string;
+    // columns: { order: number; title: string }[];
   };
 }
 
@@ -57,11 +57,11 @@ const putBoard = (req: BoardReqPut, res: FastifyReply) => {
   const board = boardsDB.findOne('id', boardId);
 
   if (board) {
-    const { title, columns } = req.body;
+    const { title } = req.body;
     const newBoard: IBoard = {
       id: board.id,
       title: title || board.title,
-      columns: columns || board.columns,
+      // columns: columns || board.columns,
     };
 
     boardsDB.change('id', boardId, newBoard);
@@ -78,13 +78,13 @@ interface BoardReqDelete extends RequestGenericInterface {
   };
 }
 
-const deleteBoard = (req: BoardReqDelete, res) => {
+const deleteBoard = (req: BoardReqDelete, res: FastifyReply) => {
   const { boardId } = req.params;
   const board = boardsDB.findOne('id', boardId);
 
   if (board) {
     boardsDB.delete('id', boardId);
-    tasksDB.delete('id', boardId);
+    tasksDB.delete('id', boardId); //!
 
     res.send({ message: `Board ${boardId} has been removed` });
   } else {
