@@ -1,6 +1,4 @@
 import * as fastify from 'fastify';
-import { RouteGenericInterface } from 'fastify/types/route';
-import { Server, IncomingMessage, ServerResponse } from 'http';
 import {
   addUser,
   deleteUsers,
@@ -9,7 +7,6 @@ import {
   putUser,
 } from './user.controllers';
 
-// User shema
 const getUserSсhema = {
   type: 'object',
   properties: {
@@ -19,7 +16,6 @@ const getUserSсhema = {
   },
 };
 
-// options for get one user
 const getUserOpts = {
   schema: {
     response: {
@@ -29,7 +25,6 @@ const getUserOpts = {
   handler: getUser,
 };
 
-// options for get all users
 const getUsersOpts = {
   schema: {
     response: {
@@ -42,7 +37,6 @@ const getUsersOpts = {
   handler: getUsers,
 };
 
-// options for create user
 const postUserOpts = {
   schema: {
     body: {
@@ -66,7 +60,6 @@ const postUserOpts = {
   handler: addUser,
 };
 
-// options for put one user
 const putUserOpts = {
   schema: {
     response: {
@@ -84,7 +77,6 @@ const putUserOpts = {
   handler: putUser,
 };
 
-// options for delete user
 const deleteUserOpts = {
   schema: {
     response: {
@@ -99,23 +91,33 @@ const deleteUserOpts = {
   handler: deleteUsers,
 };
 
-function userRoutes(server, options, done) {
-  // GET all users
+interface IParams {
+  userId: string;
+}
+
+interface IBody {
+  name: string;
+  login: string;
+  password: string;
+}
+
+interface boardRequest {
+  Params: IParams;
+  Body: IBody;
+}
+
+const userRoutes: fastify.FastifyPluginAsync = async (
+  server
+): Promise<void> => {
   server.get('/users', getUsersOpts);
 
-  // GET one user
-  server.get('/users/:userId', getUserOpts);
+  server.get<{ Params: IParams }>('/users/:userId', getUserOpts);
 
-  // POST one user
-  server.post('/users', postUserOpts);
+  server.post<{ Body: IBody }>('/users', postUserOpts);
 
-  // PUT one user
-  server.put('/users/:userId', putUserOpts);
+  server.put<boardRequest>('/users/:userId', putUserOpts);
 
-  // DELETE one user
-  server.delete('/users/:userId', deleteUserOpts);
-
-  done();
-}
+  server.delete<{ Params: IParams }>('/users/:userId', deleteUserOpts);
+};
 
 export default userRoutes;

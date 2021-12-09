@@ -8,7 +8,7 @@ const getBoards = (req: FastifyRequest, res: FastifyReply) => {
   res.send(boardsDB.getBd());
 };
 
-interface BoardReqGet extends FastifyRequest {
+interface BoardReqGet extends RequestGenericInterface {
   params: {
     boardId: string;
   };
@@ -36,7 +36,7 @@ interface BoardReqAdd extends RequestGenericInterface {
 
 const addBoard = (req: BoardReqAdd, res: FastifyReply) => {
   const { title, columns } = req.body;
-  const newBoard = new Board(title, columns);
+  const newBoard = new Board({ title, columns });
 
   boardsDB.add(newBoard);
   res.code(201).send(newBoard);
@@ -47,8 +47,8 @@ interface BoardReqPut extends RequestGenericInterface {
     boardId: string;
   };
   body: {
-    title: string;
-    // columns: { order: number; title: string }[];
+    title?: string;
+    columns?: { id: string; order: number; title: string }[];
   };
 }
 
@@ -57,11 +57,11 @@ const putBoard = (req: BoardReqPut, res: FastifyReply) => {
   const board = boardsDB.findOne('id', boardId);
 
   if (board) {
-    const { title } = req.body;
+    const { title, columns } = req.body;
     const newBoard: IBoard = {
       id: board.id,
       title: title || board.title,
-      // columns: columns || board.columns,
+      columns: columns || board.columns,
     };
 
     boardsDB.change('id', boardId, newBoard);
@@ -84,7 +84,7 @@ const deleteBoard = (req: BoardReqDelete, res: FastifyReply) => {
 
   if (board) {
     boardsDB.delete('id', boardId);
-    tasksDB.delete('id', boardId); //!
+    tasksDB.delete('id', boardId);
 
     res.send({ message: `Board ${boardId} has been removed` });
   } else {

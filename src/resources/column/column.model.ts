@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
 class Column {
-  id: string;
-
   order: number;
 
   title: string;
+
+  id: string;
 
   constructor(order: number, title: string) {
     this.id = uuidv4();

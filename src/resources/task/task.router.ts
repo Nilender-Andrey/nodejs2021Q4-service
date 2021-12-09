@@ -1,4 +1,5 @@
-import * as fp from 'fastify-plugin';
+import * as fastify from 'fastify';
+import { IColumn } from '../../types/types';
 import {
   addTask,
   deleteTasks,
@@ -88,23 +89,36 @@ const deleteTaskOpts = {
   handler: deleteTasks,
 };
 
-function taskRoutes(server, options, done) {
-  // GET all users
-  server.get('/boards/:boardId/tasks', getTasksOpts);
-
-  // GET one user
-  server.get('/boards/:boardId/tasks/:taskId', getTaskOpts);
-
-  // POST one user
-  server.post('/boards/:boardId/tasks', postTaskOpts);
-
-  // PUT one user
-  server.put('/boards/:boardId/tasks/:taskId', putTaskOpts);
-
-  // DELETE one user
-  server.delete('/boards/:boardId/tasks/:taskId', deleteTaskOpts);
-
-  done();
+interface IParams {
+  boardId: string;
+  taskId: string;
 }
+
+interface IBody {
+  title: string;
+  order: number;
+  description: string;
+  userId: string | null;
+  boardId: string;
+  columnId: IColumn | null;
+}
+interface boardRequest {
+  Params: IParams;
+  Body: IBody;
+}
+
+const taskRoutes: fastify.FastifyPluginAsync = async (
+  server
+): Promise<void> => {
+  server.get<boardRequest>('/boards/:boardId/tasks', getTasksOpts);
+
+  server.get<boardRequest>('/boards/:boardId/tasks/:taskId', getTaskOpts);
+
+  server.post<boardRequest>('/boards/:boardId/tasks', postTaskOpts);
+
+  server.put<boardRequest>('/boards/:boardId/tasks/:taskId', putTaskOpts);
+
+  server.delete<boardRequest>('/boards/:boardId/tasks/:taskId', deleteTaskOpts);
+};
 
 export default taskRoutes;

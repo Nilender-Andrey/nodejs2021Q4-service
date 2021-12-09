@@ -1,14 +1,20 @@
-import { FastifyReply } from 'fastify';
+import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
 
 import tasksDB from '../../bd/tasks';
 import usersDB from '../../bd/users';
 import User from './user.model';
 
-const getUsers = (res: FastifyReply) => {
+const getUsers = (req: FastifyRequest, res: FastifyReply) => {
   res.send(usersDB.getBd());
 };
 
-const getUser = (req, res: FastifyReply) => {
+interface UserReqGet extends RequestGenericInterface {
+  params: {
+    userId: string;
+  };
+}
+
+const getUser = (req: UserReqGet, res: FastifyReply) => {
   const { userId } = req.params;
   const user = usersDB.findOne('id', userId);
 
@@ -19,14 +25,33 @@ const getUser = (req, res: FastifyReply) => {
   }
 };
 
-const addUser = (req, res: FastifyReply) => {
+interface UserReqAdd extends RequestGenericInterface {
+  body: {
+    name: string;
+    login: string;
+    password: string;
+  };
+}
+
+const addUser = (req: UserReqAdd, res: FastifyReply) => {
   const newUser = new User(req.body);
   usersDB.add(newUser);
 
   res.code(201).send(newUser);
 };
 
-const putUser = (req, res: FastifyReply) => {
+interface UserReqPut extends RequestGenericInterface {
+  params: {
+    userId: string;
+  };
+  body: {
+    name?: string;
+    login?: string;
+    password?: string;
+  };
+}
+
+const putUser = (req: UserReqPut, res: FastifyReply) => {
   const { userId } = req.params;
   const { name, login, password } = req.body;
   const user = usersDB.findOne('id', userId);
@@ -46,7 +71,13 @@ const putUser = (req, res: FastifyReply) => {
   }
 };
 
-const deleteUsers = (req, res: FastifyReply) => {
+interface UserReqDelete extends RequestGenericInterface {
+  params: {
+    userId: string;
+  };
+}
+
+const deleteUsers = (req: UserReqDelete, res: FastifyReply) => {
   const { userId } = req.params;
   const user = usersDB.findOne('id', userId);
 
@@ -54,8 +85,7 @@ const deleteUsers = (req, res: FastifyReply) => {
     usersDB.delete('id', userId);
 
     tasksDB.getBd().forEach((t) => {
-      if (t.id === userId) {
-        // !
+      if (t.userId === userId) {
         tasksDB.change('userId', userId, { ...t, userId: null });
       }
     });

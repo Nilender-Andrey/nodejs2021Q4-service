@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IColumn, ITask } from '../../types/types';
+import { IColumn, TaskArgType } from '../../types/types';
 
 class Task {
-  id: string;
-
   title: string;
 
   order: number;
@@ -16,16 +14,17 @@ class Task {
 
   columnId: IColumn | null;
 
+  id: string;
+
   constructor({
-    id = uuidv4(),
     title,
     order,
     description,
     userId,
     boardId,
     columnId,
-  }: ITask) {
-    this.id = id;
+  }: TaskArgType) {
+    this.id = uuidv4();
     this.title = title;
     this.order = order;
     this.description = description;

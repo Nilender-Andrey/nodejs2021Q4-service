@@ -1,16 +1,30 @@
-import { FastifyReply } from 'fastify';
+import { FastifyReply, RequestGenericInterface } from 'fastify';
 import boardsDB from '../../bd/boards';
 import tasksDB from '../../bd/tasks';
+import { IColumn } from '../../types/types';
 import Task from './task.model';
 
-const getTasks = (req, res: FastifyReply) => {
+interface TasksReqGet extends RequestGenericInterface {
+  params: {
+    boardId: string;
+  };
+}
+
+const getTasks = (req: TasksReqGet, res: FastifyReply) => {
   const { boardId } = req.params;
   const allTasksInBoard = tasksDB.findAll('boardId', boardId);
 
   res.send(allTasksInBoard);
 };
 
-const getTask = (req, res: FastifyReply) => {
+interface TaskReqGet extends RequestGenericInterface {
+  params: {
+    boardId: string;
+    taskId: string;
+  };
+}
+
+const getTask = (req: TaskReqGet, res: FastifyReply) => {
   const { boardId, taskId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -28,7 +42,22 @@ const getTask = (req, res: FastifyReply) => {
   }
 };
 
-const addTask = (req, res: FastifyReply) => {
+interface TaskReqAdd extends RequestGenericInterface {
+  params: {
+    boardId: string;
+    taskId: string;
+  };
+  body: {
+    title: string;
+    order: number;
+    description: string;
+    userId: string | null;
+    boardId: string;
+    columnId: IColumn | null;
+  };
+}
+
+const addTask = (req: TaskReqAdd, res: FastifyReply) => {
   const { boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -51,7 +80,22 @@ const addTask = (req, res: FastifyReply) => {
   }
 };
 
-const putTask = (req, res: FastifyReply) => {
+interface TaskReqPut extends RequestGenericInterface {
+  params: {
+    boardId: string;
+    taskId: string;
+  };
+  body: {
+    title: string;
+    order: number;
+    description: string;
+    userId: string | null;
+    boardId: string;
+    columnId: IColumn | null;
+  };
+}
+
+const putTask = (req: TaskReqPut, res: FastifyReply) => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -82,7 +126,14 @@ const putTask = (req, res: FastifyReply) => {
   }
 };
 
-const deleteTasks = (req, res: FastifyReply) => {
+interface TaskReqDelete extends RequestGenericInterface {
+  params: {
+    boardId: string;
+    taskId: string;
+  };
+}
+
+const deleteTasks = (req: TaskReqDelete, res: FastifyReply) => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 

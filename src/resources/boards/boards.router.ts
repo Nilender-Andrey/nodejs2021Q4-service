@@ -95,27 +95,13 @@ const deleteBoardOpts = {
   handler: deleteBoard,
 };
 
-/* function boardRoutes(server:fastify.FastifyInstance<Server, IncomingMessage, ServerResponse, FastifyLoggerInstance> , options, done:  (error?: fastify.FastifyError) => void) {
-  server.get('/boards', getBoardsOpts);
-
-  server.get('/boards/:boardId', getBoardOpts);
-
-  server.post('/boards', postBoardOpts);
-
-  server.put('/boards/:boardId', putBoardOpts);
-
-  server.delete('/boards/:boardId', deleteBoardOpts);
-
-  done();
-} */
-
 interface IParams {
   boardId: string;
 }
 
 interface IBody {
   title: string;
-  columns: { order: number; title: string }[];
+  columns: { id: string; order: number; title: string }[];
 }
 
 interface boardRequest {
