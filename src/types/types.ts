@@ -38,7 +38,7 @@ export interface ITask {
   description: string;
   userId: string | null;
   boardId: string;
-  columnId: IColumn | null;
+  columnId: string | null;
 }
 export interface TaskArgType {
   title: string;
@@ -46,5 +46,5 @@ export interface TaskArgType {
   description: string;
   userId: string | null;
   boardId: string;
-  columnId: IColumn | null;
+  columnId: string | null;
 }

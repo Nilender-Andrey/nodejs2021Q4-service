@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IUser, UserArgType } from '../../types/types';
 
+/** The class to create a user instance */
 class User {
   id: string;
 
@@ -9,6 +10,14 @@ class User {
   login: string;
 
   password: string;
+
+  /**
+   * to create a user, the constructor takes:
+   * @param name - user name {string}
+   * @param login - user's login {string}
+   * @param password - user password {string}
+   * @returns user object {object}
+   */
 
   constructor({ name, login, password }: UserArgType) {
     this.id = uuidv4();

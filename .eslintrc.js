@@ -19,9 +19,24 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 13,
   },
-  plugins: ['@typescript-eslint', '@typescript-eslint/tslint'],
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
+    ecmaVersion: 2021,
+    createDefaultProgram: true,
+    ecmaFeatures: {
+      impliedStrict: true,
+    },
+  },
+  plugins: [
+    '@typescript-eslint',
+    'eslint-plugin-tsdoc',
+    '@typescript-eslint/tslint',
+  ],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-explicit-any': ['error'],
+    'tsdoc/syntax': 'error',
     'import/extensions': 'off',
     'linebreak-style': 'off',
     'node/no-unsupported-features/es-syntax': 'off',

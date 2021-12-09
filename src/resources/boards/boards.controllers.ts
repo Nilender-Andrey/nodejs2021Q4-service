@@ -4,7 +4,12 @@ import tasksDB from '../../bd/tasks';
 import { IBoard } from '../../types/types';
 import Board from './boards.model';
 
-const getBoards = (req: FastifyRequest, res: FastifyReply) => {
+/**
+ * Get all boards from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+const getBoards = (req: FastifyRequest, res: FastifyReply): void => {
   res.send(boardsDB.getBd());
 };
 
@@ -14,7 +19,13 @@ interface BoardReqGet extends RequestGenericInterface {
   };
 }
 
-const getBoard = (req: BoardReqGet, res: FastifyReply) => {
+/**
+ * Get one board from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const getBoard = (req: BoardReqGet, res: FastifyReply): void => {
   const { boardId } = req.params;
   if (boardId) {
     const board = boardsDB.findOne('id', boardId);
@@ -34,7 +45,13 @@ interface BoardReqAdd extends RequestGenericInterface {
   };
 }
 
-const addBoard = (req: BoardReqAdd, res: FastifyReply) => {
+/**
+ * Adds board to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const addBoard = (req: BoardReqAdd, res: FastifyReply): void => {
   const { title, columns } = req.body;
   const newBoard = new Board({ title, columns });
 
@@ -52,7 +69,13 @@ interface BoardReqPut extends RequestGenericInterface {
   };
 }
 
-const putBoard = (req: BoardReqPut, res: FastifyReply) => {
+/**
+ * Modifies board to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const putBoard = (req: BoardReqPut, res: FastifyReply): void => {
   const { boardId } = req.params;
   const board = boardsDB.findOne('id', boardId);
 
@@ -78,7 +101,13 @@ interface BoardReqDelete extends RequestGenericInterface {
   };
 }
 
-const deleteBoard = (req: BoardReqDelete, res: FastifyReply) => {
+/**
+ * Removes the board from the database and all related tasks
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const deleteBoard = (req: BoardReqDelete, res: FastifyReply): void => {
   const { boardId } = req.params;
   const board = boardsDB.findOne('id', boardId);
 

@@ -4,6 +4,11 @@ import tasksDB from '../../bd/tasks';
 import usersDB from '../../bd/users';
 import User from './user.model';
 
+/**
+ * Get all users from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
 const getUsers = (req: FastifyRequest, res: FastifyReply) => {
   res.send(usersDB.getBd());
 };
@@ -13,6 +18,12 @@ interface UserReqGet extends RequestGenericInterface {
     userId: string;
   };
 }
+
+/**
+ * Get one users from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
 
 const getUser = (req: UserReqGet, res: FastifyReply) => {
   const { userId } = req.params;
@@ -33,6 +44,12 @@ interface UserReqAdd extends RequestGenericInterface {
   };
 }
 
+/**
+ * Add user to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
 const addUser = (req: UserReqAdd, res: FastifyReply) => {
   const newUser = new User(req.body);
   usersDB.add(newUser);
@@ -50,6 +67,12 @@ interface UserReqPut extends RequestGenericInterface {
     password?: string;
   };
 }
+
+/**
+ * Modifies user to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
 
 const putUser = (req: UserReqPut, res: FastifyReply) => {
   const { userId } = req.params;
@@ -76,6 +99,12 @@ interface UserReqDelete extends RequestGenericInterface {
     userId: string;
   };
 }
+
+/**
+ * Removes the user from the database and installs null on all his tasks
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
 
 const deleteUsers = (req: UserReqDelete, res: FastifyReply) => {
   const { userId } = req.params;

@@ -1,5 +1,5 @@
 import * as fastify from 'fastify';
-import { IColumn } from '../../types/types';
+
 import {
   addTask,
   deleteTasks,
@@ -8,7 +8,6 @@ import {
   putTask,
 } from './task.controllers';
 
-// task shema
 const getTaskSсhema = {
   type: 'object',
   properties: {
@@ -22,7 +21,6 @@ const getTaskSсhema = {
   },
 };
 
-// options for get tasks in the board
 const getTasksOpts = {
   schema: {
     response: {
@@ -35,7 +33,6 @@ const getTasksOpts = {
   handler: getTasks,
 };
 
-// options for get one task in the board
 const getTaskOpts = {
   schema: {
     response: {
@@ -45,18 +42,8 @@ const getTaskOpts = {
   handler: getTask,
 };
 
-// options for create task
 const postTaskOpts = {
   schema: {
-    /*  body: {
-      type: 'object',
-      required: ['title', 'order', 'description', 'userId', 'columnId'], // 'columnId'
-      titleTask: { type: 'string' },
-      order: { type: 'number' },
-      descriptionTask: { type: 'string' },
-      userId: { type: ['string', 'null'] },
-      columnId: { type: ['string', 'null'] },
-    }, */
     response: {
       201: getTaskSсhema,
     },
@@ -64,7 +51,6 @@ const postTaskOpts = {
   handler: addTask,
 };
 
-// options for put one task
 const putTaskOpts = {
   schema: {
     response: {
@@ -74,7 +60,6 @@ const putTaskOpts = {
   handler: putTask,
 };
 
-// options for delete task
 const deleteTaskOpts = {
   schema: {
     response: {
@@ -100,13 +85,19 @@ interface IBody {
   description: string;
   userId: string | null;
   boardId: string;
-  columnId: IColumn | null;
+  columnId: string | null;
 }
 interface boardRequest {
   Params: IParams;
   Body: IBody;
 }
 
+/**
+ * specifies the routes to process for requests to the task
+ * @param server - to which requests are sent (fastify)
+ * @param url - request params {string}
+ * @param processing scheme and handler {object}
+ */
 const taskRoutes: fastify.FastifyPluginAsync = async (
   server
 ): Promise<void> => {

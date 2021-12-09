@@ -10,7 +10,13 @@ interface TasksReqGet extends RequestGenericInterface {
   };
 }
 
-const getTasks = (req: TasksReqGet, res: FastifyReply) => {
+/**
+ * Get all tasks from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const getTasks = (req: TasksReqGet, res: FastifyReply): void => {
   const { boardId } = req.params;
   const allTasksInBoard = tasksDB.findAll('boardId', boardId);
 
@@ -24,7 +30,13 @@ interface TaskReqGet extends RequestGenericInterface {
   };
 }
 
-const getTask = (req: TaskReqGet, res: FastifyReply) => {
+/**
+ * Get one task from the database and return with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const getTask = (req: TaskReqGet, res: FastifyReply): void => {
   const { boardId, taskId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -53,11 +65,17 @@ interface TaskReqAdd extends RequestGenericInterface {
     description: string;
     userId: string | null;
     boardId: string;
-    columnId: IColumn | null;
+    columnId: string | null;
   };
 }
 
-const addTask = (req: TaskReqAdd, res: FastifyReply) => {
+/**
+ * Adds task to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const addTask = (req: TaskReqAdd, res: FastifyReply): void => {
   const { boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -91,11 +109,17 @@ interface TaskReqPut extends RequestGenericInterface {
     description: string;
     userId: string | null;
     boardId: string;
-    columnId: IColumn | null;
+    columnId: string | null;
   };
 }
 
-const putTask = (req: TaskReqPut, res: FastifyReply) => {
+/**
+ * Modifies task to the database and returns it with a response
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const putTask = (req: TaskReqPut, res: FastifyReply): void => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 
@@ -133,7 +157,13 @@ interface TaskReqDelete extends RequestGenericInterface {
   };
 }
 
-const deleteTasks = (req: TaskReqDelete, res: FastifyReply) => {
+/**
+ * Removes the task from the database
+ * @param req - request to the server {object}
+ * @param res - server response {object}
+ */
+
+const deleteTasks = (req: TaskReqDelete, res: FastifyReply): void => {
   const { taskId, boardId } = req.params;
   const thereIsSuchBoard = boardsDB.findOne('id', boardId);
 

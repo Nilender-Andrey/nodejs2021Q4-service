@@ -1,4 +1,4 @@
-// import { PORT } from './common/config';
+import { PORT } from './common/config';
 import server from './index';
 
-server.listen(4000).catch(console.error);
+server.listen(PORT).catch(console.error);
