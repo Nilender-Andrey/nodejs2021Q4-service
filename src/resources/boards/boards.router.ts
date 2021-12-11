@@ -24,14 +24,30 @@ const boardSсhema = {
   },
 };
 
+const paramsSсhema = {
+  type: 'object',
+  required: ['boardId'],
+  properties: {
+    boardId: { type: 'string' },
+  },
+};
+
+const bodySсhema = {
+  type: 'object',
+  required: ['title', 'columns'],
+  titleBoard: { type: 'string' },
+  columns: {
+    type: 'array',
+    items: {
+      order: { type: 'number' },
+      title: { type: 'string' },
+    },
+  },
+};
+
 const getBoardOpts = {
   schema: {
-    params: {
-      type: 'object',
-      properties: {
-        boardId: { type: 'string' },
-      },
-    },
+    params: paramsSсhema,
     response: {
       200: boardSсhema,
     },
@@ -53,18 +69,7 @@ const getBoardsOpts = {
 
 const postBoardOpts = {
   schema: {
-    body: {
-      type: 'object',
-      required: ['title', 'columns'],
-      titleBoard: { type: 'string' },
-      columns: {
-        type: 'array',
-        items: {
-          order: { type: 'number' },
-          title: { type: 'string' },
-        },
-      },
-    },
+    body: bodySсhema,
     response: {
       201: boardSсhema,
     },
@@ -74,8 +79,20 @@ const postBoardOpts = {
 
 const putBoardOpts = {
   schema: {
+    params: paramsSсhema,
+    body: bodySсhema,
     response: {
-      200: boardSсhema,
+      200: {
+        type: 'object',
+        titleBoard: { type: 'string' },
+        columns: {
+          type: 'array',
+          items: {
+            order: { type: 'number' },
+            title: { type: 'string' },
+          },
+        },
+      },
     },
   },
   handler: putBoard,
@@ -83,6 +100,7 @@ const putBoardOpts = {
 
 const deleteBoardOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: {
         type: 'object',
@@ -125,7 +143,7 @@ const boardRoutes: fastify.FastifyPluginAsync = async (
 
   server.put<boardRequest>('/boards/:boardId', putBoardOpts);
 
-  server.delete<boardRequest>('/boards/:boardId', deleteBoardOpts);
+  server.delete<{ Params: IParams }>('/boards/:boardId', deleteBoardOpts);
 };
 
 export default boardRoutes;

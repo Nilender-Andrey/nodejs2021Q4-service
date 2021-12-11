@@ -21,6 +21,15 @@ const getTaskSсhema = {
   },
 };
 
+const paramsSсhema = {
+  type: 'object',
+  required: ['boardId', 'taskId'],
+  properties: {
+    boardId: { type: 'string' },
+    taskId: { type: 'string' },
+  },
+};
+
 const getTasksOpts = {
   schema: {
     response: {
@@ -35,6 +44,7 @@ const getTasksOpts = {
 
 const getTaskOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: getTaskSсhema,
     },
@@ -53,6 +63,7 @@ const postTaskOpts = {
 
 const putTaskOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: getTaskSсhema,
     },
@@ -62,6 +73,7 @@ const putTaskOpts = {
 
 const deleteTaskOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: {
         type: 'object',

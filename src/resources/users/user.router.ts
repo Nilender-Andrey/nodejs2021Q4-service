@@ -16,8 +16,17 @@ const getUserSсhema = {
   },
 };
 
+const paramsSсhema = {
+  type: 'object',
+  required: ['userId'],
+  properties: {
+    userId: { type: 'string' },
+  },
+};
+
 const getUserOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: getUserSсhema,
     },
@@ -62,6 +71,7 @@ const postUserOpts = {
 
 const putUserOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: {
         type: 'object',
@@ -79,6 +89,7 @@ const putUserOpts = {
 
 const deleteUserOpts = {
   schema: {
+    params: paramsSсhema,
     response: {
       200: {
         type: 'object',
