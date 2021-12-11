@@ -1,7 +1,6 @@
 import { FastifyReply, RequestGenericInterface } from 'fastify';
 import boardsDB from '../../bd/boards';
 import tasksDB from '../../bd/tasks';
-import { IColumn } from '../../types/types';
 import Task from './task.model';
 
 interface TasksReqGet extends RequestGenericInterface {
@@ -12,8 +11,8 @@ interface TasksReqGet extends RequestGenericInterface {
 
 /**
  * Get all tasks from the database and return with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const getTasks = (req: TasksReqGet, res: FastifyReply): void => {
@@ -32,8 +31,8 @@ interface TaskReqGet extends RequestGenericInterface {
 
 /**
  * Get one task from the database and return with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const getTask = (req: TaskReqGet, res: FastifyReply): void => {
@@ -71,8 +70,8 @@ interface TaskReqAdd extends RequestGenericInterface {
 
 /**
  * Adds task to the database and returns it with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const addTask = (req: TaskReqAdd, res: FastifyReply): void => {
@@ -81,15 +80,15 @@ const addTask = (req: TaskReqAdd, res: FastifyReply): void => {
 
   if (thereIsSuchBoard) {
     const { title, order, description, userId, columnId } = req.body;
-    const data = {
+
+    const newTask = new Task(
       title,
       order,
       description,
       userId,
       boardId,
-      columnId,
-    };
-    const newTask = new Task(data);
+      columnId
+    );
 
     tasksDB.add(newTask);
     res.code(201).send(newTask);
@@ -115,8 +114,8 @@ interface TaskReqPut extends RequestGenericInterface {
 
 /**
  * Modifies task to the database and returns it with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const putTask = (req: TaskReqPut, res: FastifyReply): void => {
@@ -159,8 +158,8 @@ interface TaskReqDelete extends RequestGenericInterface {
 
 /**
  * Removes the task from the database
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const deleteTasks = (req: TaskReqDelete, res: FastifyReply): void => {

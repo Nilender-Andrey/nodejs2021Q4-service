@@ -4,7 +4,7 @@ class RepositoryMaintenance<T> {
 
   /**
    * Connects base to methods
-   * @param base - array database {array}
+   * @param base - database
    */
 
   constructor(base: T[]) {
@@ -13,17 +13,18 @@ class RepositoryMaintenance<T> {
 
   /**
    * Getting all data from a database
-   * @returns All data from the database {array}
+   * @returns All data from the database
    */
+
   getBd(): T[] {
     return this.base;
   }
 
   /**
-   * Search one match
-   * @param property - the field by which we are looking {string}
-   * @param necessary - what value are we looking for {string}
-   * @returns search result or undefined {object | undefined}
+   * Search one match in the database
+   * @param property - the field by which we are looking
+   * @param necessary - what value are we looking for
+   * @returns search result or undefined
    */
 
   findOne<P extends keyof T>(property: P, necessary: T[P]): T | undefined {
@@ -31,10 +32,10 @@ class RepositoryMaintenance<T> {
   }
 
   /**
-   * Search all matches
-   * @param property - the field by which we are looking {string}
-   * @param necessary - what value are we looking for {string}
-   * @returns array of results {array}
+   * Search all matches in the database
+   * @param property - the field by which we are looking
+   * @param necessary - what value are we looking for
+   * @returns array of results
    */
 
   findAll<P extends keyof T>(property: P, necessary: T[P]): T[] {
@@ -43,9 +44,9 @@ class RepositoryMaintenance<T> {
 
   /**
    * Get the index of an element in the database
-   * @param property - the field by which we are looking {string}
-   * @param necessary - what value are we looking for {string}
-   * @returns the index of the element found or -1 {number}
+   * @param property - the field by which we are looking
+   * @param necessary - what value are we looking for
+   * @returns the index of the element found or -1
    */
 
   findIndex<P extends keyof T>(property: P, necessary: T[P]): number {
@@ -54,7 +55,7 @@ class RepositoryMaintenance<T> {
 
   /**
    * Adds an element to the base
-   * @param item - the item to add {object}
+   * @param item - the item to add
    * @returns nothing
    */
 
@@ -63,10 +64,10 @@ class RepositoryMaintenance<T> {
   }
 
   /**
-   * Changes an element in the base
-   * @param property - the field by which we are looking {string}
-   * @param necessary - what value are we looking for {string}
-   * @param replacedBy - new value {object}
+   * Changes an element in the database
+   * @param property - the field by which we are looking
+   * @param necessary - what value are we looking for
+   * @param replacedBy - new value
    * @returns nothing
    */
 
@@ -77,9 +78,9 @@ class RepositoryMaintenance<T> {
   }
 
   /**
-   * Removes an element from the base
-   * @param property - the field by which we are looking {string}
-   * @param necessary - what value are we looking for {string}
+   * Removes an element from the database
+   * @param property - the field by which we are looking
+   * @param necessary - what value are we looking for
    * @returns nothing
    */
 

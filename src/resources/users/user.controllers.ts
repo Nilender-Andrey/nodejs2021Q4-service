@@ -6,9 +6,10 @@ import User from './user.model';
 
 /**
  * Get all users from the database and return with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
+
 const getUsers = (req: FastifyRequest, res: FastifyReply) => {
   res.send(usersDB.getBd());
 };
@@ -21,8 +22,8 @@ interface UserReqGet extends RequestGenericInterface {
 
 /**
  * Get one users from the database and return with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const getUser = (req: UserReqGet, res: FastifyReply) => {
@@ -46,12 +47,13 @@ interface UserReqAdd extends RequestGenericInterface {
 
 /**
  * Add user to the database and returns it with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const addUser = (req: UserReqAdd, res: FastifyReply) => {
-  const newUser = new User(req.body);
+  const { name, login, password } = req.body;
+  const newUser = new User(name, login, password);
   usersDB.add(newUser);
 
   res.code(201).send(newUser);
@@ -70,8 +72,8 @@ interface UserReqPut extends RequestGenericInterface {
 
 /**
  * Modifies user to the database and returns it with a response
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const putUser = (req: UserReqPut, res: FastifyReply) => {
@@ -102,8 +104,8 @@ interface UserReqDelete extends RequestGenericInterface {
 
 /**
  * Removes the user from the database and installs null on all his tasks
- * @param req - request to the server {object}
- * @param res - server response {object}
+ * @param req - request to the server
+ * @param res - server response
  */
 
 const deleteUsers = (req: UserReqDelete, res: FastifyReply) => {

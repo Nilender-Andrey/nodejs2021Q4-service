@@ -111,10 +111,9 @@ interface boardRequest {
 
 /**
  * specifies the routes to process for requests to the board
- * @param server - to which requests are sent (fastify)
- * @param url - request params {object}
- * @param processing scheme and handler {object}
+ * @param server - to which requests are sent
  */
+
 const boardRoutes: fastify.FastifyPluginAsync = async (
   server
 ): Promise<void> => {

@@ -9,10 +9,10 @@ class Column {
   id: string;
 
   /**
-   * to create a сolumn, the constructor takes:
-   * @param title - сolumn name {string}
-   * @param order - importance of the сolumn {number}
-   * @returns сolumn object
+   * to create a сolumn
+   * @param title - сolumn name
+   * @param order - importance of the сolumn
+   * @returns сolumn
    */
 
   constructor(order: number, title: string) {
