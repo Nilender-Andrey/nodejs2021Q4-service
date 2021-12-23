@@ -7,9 +7,16 @@ import { parsedBodyForLogger, pino } from './logger/logger';
 import { ServerType } from './types/types';
 import uncaughtExceptionListener from './listeners/uncaught_exception';
 import unhandledRejectionListener from './listeners/unhandled_rejection';
+import checkStartupSettings from './utils/check_startup_settings';
+import setErrorHandler from './error_handler/set_error_handler';
 
 const server: ServerType = fastify({
   logger: pino,
+});
+
+server.after(() => {
+  checkStartupSettings(server);
+  setErrorHandler(server);
 });
 
 parsedBodyForLogger(server);

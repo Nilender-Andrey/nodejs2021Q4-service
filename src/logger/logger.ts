@@ -14,7 +14,7 @@ export const pino = pinoLogger({
 });
 
 export const parsedBodyForLogger = (server: ServerType) =>
-  server.addHook('preHandler', function (req, reply, done) {
+  server.addHook('preHandler', (req, reply, done) => {
     if (req.body) {
       req.log.info({ body: req.body }, 'parsed body');
     }

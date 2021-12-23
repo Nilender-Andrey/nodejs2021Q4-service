@@ -1,16 +1,10 @@
-import server from '../index';
-import { pino } from '../logger/logger';
+import { ServerType } from '../types/types';
 
-server.setErrorHandler(function (error, request, reply) {
-  const statusCode = error.statusCode;
-  if (statusCode == 404) {
-    console.log('Я тут');
-    pino.warn(error, error.message);
+const setErrorHandler = (server: ServerType) =>
+  server.setErrorHandler((error, request, reply) => {
+    server.log.error(error);
 
-    this.log.error(error);
+    reply.status(error.statusCode || 500).send(error);
+  });
 
-    reply.code(statusCode);
-    // return { msg: error.message };
-  }
-  reply.code(500).send({ msg: 'Internal Server Error' });
-});
+export default setErrorHandler;

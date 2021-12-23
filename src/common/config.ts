@@ -7,5 +7,5 @@ dotenv.config({
 
 const PORT = Number(process.env.PORT);
 const LEVEL_LOGGER = Number(process.env.LEVEL_LOGGER);
-const NODE_ENV = process.env.NODE_ENV;
+const { NODE_ENV } = process.env;
 export { PORT, LEVEL_LOGGER, NODE_ENV };

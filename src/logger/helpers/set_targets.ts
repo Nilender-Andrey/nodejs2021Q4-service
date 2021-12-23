@@ -1,5 +1,7 @@
-import { LEVEL_LOGGER, NODE_ENV } from '../../common/config';
 import path from 'path';
+import pinoLogger, { TransportTargetOptions } from 'pino';
+
+import { LEVEL_LOGGER, NODE_ENV } from '../../common/config';
 import {
   OUTPUT_TO_CONSOLE,
   LOG_ERRORS_IN_ERROR_FILE,
@@ -8,14 +10,12 @@ import {
   ERROR_FILE_NAME,
 } from '../config';
 
-import pinoLogger, { TransportTargetOptions } from 'pino';
-
 const filePath = (fileName: string) =>
   path.join(__dirname, '../../..', fileName);
 
 const setTargets = () => {
   let level: pinoLogger.LevelWithSilent;
-  let targets: TransportTargetOptions[] = [];
+  const targets: TransportTargetOptions[] = [];
 
   switch (LEVEL_LOGGER) {
     case 0:
@@ -31,7 +31,7 @@ const setTargets = () => {
       level = 'debug';
       break;
     default:
-      level = 'trace';
+      level = 'debug';
       break;
   }
 
@@ -41,7 +41,7 @@ const setTargets = () => {
     options: { colorize: true },
   };
 
-  let logTarget = {
+  const logTarget = {
     level,
     target: 'pino/file',
     options: { destination: filePath(LOG_FILE_NAME), mkdir: true },
