@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import pinoLogger from 'pino';
 
 import { ServerType } from '../types/types';
@@ -13,11 +12,6 @@ export const pino = pinoLogger({
   serializers: dataFormat,
   timestamp: dateFormat,
 });
-
-/*  genReqId(req: FastifyRequest) {
-    return uuidv4();
-  }, 
- */
 
 export const parsedBodyForLogger = (server: ServerType) =>
   server.addHook('preHandler', function (req, reply, done) {

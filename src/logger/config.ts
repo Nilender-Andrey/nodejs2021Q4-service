@@ -2,8 +2,8 @@ const OUTPUT_TO_CONSOLE = true;
 const LOG_ERRORS_IN_ERROR_FILE = true;
 const WRITING_LOG_TO_FILE = true;
 
-const LOG_FILE_NAME = 'log.txt';
-const ERROR_FILE_NAME = 'error.txt';
+const LOG_FILE_NAME = 'file.log';
+const ERROR_FILE_NAME = 'error.log';
 
 export {
   OUTPUT_TO_CONSOLE,
