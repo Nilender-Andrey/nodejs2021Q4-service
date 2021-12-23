@@ -10,6 +10,7 @@ import Board from './boards.model';
  * @param res - server response
  */
 const getBoards = (req: FastifyRequest, res: FastifyReply): void => {
+  throw new Error('getBoards');
   res.send(boardsDB.getBd());
 };
 
