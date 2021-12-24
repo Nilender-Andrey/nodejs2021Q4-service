@@ -1,65 +1,62 @@
-import path from 'path';
-import pinoLogger, { TransportTargetOptions } from 'pino';
+import { TransportTargetOptions } from 'pino';
 
-import { LEVEL_LOGGER, NODE_ENV } from '../../common/config';
+import { NODE_ENV } from '../../common/config';
 import {
-  OUTPUT_TO_CONSOLE,
   LOG_ERRORS_IN_ERROR_FILE,
   WRITING_LOG_TO_FILE,
   LOG_FILE_NAME,
   ERROR_FILE_NAME,
+  OUTPUT_TO_CONSOLE_IN_PRODUCTION,
+  OUTPUT_TO_CONSOLE_IN_DEVELOPMENT,
 } from '../config';
+import getTrackingLevel from './get_tracking_level';
+import setLogFalePath from './setLogFalePath';
 
-const filePath = (fileName: string) =>
-  path.join(__dirname, '../../..', fileName);
+interface ITargetsOptions {
+  prettyTarget: TransportTargetOptions;
+  logTarget: TransportTargetOptions;
+  errorTarget: TransportTargetOptions;
+}
 
-const setTargets = () => {
-  let level: pinoLogger.LevelWithSilent;
-  const targets: TransportTargetOptions[] = [];
-
-  switch (LEVEL_LOGGER) {
-    case 0:
-      level = 'error';
-      break;
-    case 1:
-      level = 'warn';
-      break;
-    case 2:
-      level = 'info';
-      break;
-    case 3:
-      level = 'debug';
-      break;
-    default:
-      level = 'debug';
-      break;
-  }
-
-  const prettyTarget = {
-    level,
+const targetsOptions: ITargetsOptions = {
+  prettyTarget: {
+    level: getTrackingLevel(),
     target: 'pino-pretty',
     options: { colorize: true },
-  };
+  },
 
-  const logTarget = {
-    level,
+  logTarget: {
+    level: getTrackingLevel(),
     target: 'pino/file',
-    options: { destination: filePath(LOG_FILE_NAME), mkdir: true },
-  };
+    options: { destination: setLogFalePath(LOG_FILE_NAME), mkdir: true },
+  },
 
-  level = 'error';
-  const errorTarget = {
-    level,
+  errorTarget: {
+    level: 'error',
     target: 'pino/file',
-    options: { destination: filePath(ERROR_FILE_NAME), mkdir: true },
-  };
+    options: { destination: setLogFalePath(ERROR_FILE_NAME), mkdir: true },
+  },
+};
 
-  if (WRITING_LOG_TO_FILE) targets.push(logTarget);
+/**
+ *
+ * Generates logger targets depending on user settings
+ *
+ * @returns targets array
+ */
 
-  if (OUTPUT_TO_CONSOLE && NODE_ENV === 'development')
-    targets.push(prettyTarget);
+const setTargets = (): TransportTargetOptions[] => {
+  const targets: TransportTargetOptions[] = [];
 
-  if (LOG_ERRORS_IN_ERROR_FILE) targets.push(errorTarget);
+  if (WRITING_LOG_TO_FILE) targets.push(targetsOptions.logTarget);
+
+  if (OUTPUT_TO_CONSOLE_IN_DEVELOPMENT && NODE_ENV === 'development')
+    targets.push(targetsOptions.prettyTarget);
+
+  if (OUTPUT_TO_CONSOLE_IN_PRODUCTION && NODE_ENV === 'production')
+    targets.push(targetsOptions.prettyTarget);
+
+  if (LOG_ERRORS_IN_ERROR_FILE) targets.push(targetsOptions.errorTarget);
 
   return targets;
 };

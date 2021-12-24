@@ -9,7 +9,13 @@ const options: OptionsTimeType = {
   second: 'numeric',
 };
 
-const dateFormat = () =>
+/**
+ * Returns the date in the format [day/month/year, hours:min:sec]
+ *
+ * @returns date in the format [day/month/year, hours:min:sec]
+ */
+
+const dateFormat = (): string =>
   `,"time":"${new Date(Date.now()).toLocaleDateString('en-GB', options)}"`;
 
 export default dateFormat;
