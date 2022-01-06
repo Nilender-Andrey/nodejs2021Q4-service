@@ -8,6 +8,6 @@ import path from 'path';
  */
 
 const setLogFalePath = (fileName: string): string =>
-  path.join(__dirname, '../../..', fileName);
+  path.join(__dirname, '../..', fileName);
 
 export default setLogFalePath;
