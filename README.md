@@ -1,3 +1,12 @@
+## Run application with Docker
+
+## Run application with Docker
+
+1. install Docker
+2. git clone {repository URL}
+3. run the `docker compose up` command to run the application
+4. to stop, run `docker compose down`
+
 # RS School REST service
 
 ## Prerequisites

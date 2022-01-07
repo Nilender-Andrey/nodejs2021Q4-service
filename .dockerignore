@@ -2,3 +2,5 @@ node_modules
 .git
 Dockerfile
 db
+postgres_db
+log
