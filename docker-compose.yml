@@ -7,7 +7,7 @@ services:
     container_name: fastify
     restart: always
     volumes:
-      - .:/app
+      - ./src:/app/src
       - logs:/app/log
     networks:
       - my_network
