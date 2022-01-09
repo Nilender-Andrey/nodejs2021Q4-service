@@ -1,9 +1,11 @@
 ## Run application with Docker
 
 1. install Docker
-2. git clone {repository URL}
-3. run the `docker compose up` command to run the application
-4. to stop, run `docker compose down`
+2. execute command `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
+3. go to the folder with the program copy
+4. open terminal with administrator rights
+5. run the `docker compose up` command to run the application
+6. to stop, run `docker compose down`
 
 # RS School REST service
 
