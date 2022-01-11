@@ -1,8 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Entity } from 'typeorm';
 import { ColumnArgType } from '../../types/types';
 import Column from '../column/column.model';
 
 /**  The class to create a board instance */
+@Entity()
 class Board {
   id: string;
 

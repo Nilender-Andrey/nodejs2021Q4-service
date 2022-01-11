@@ -8,6 +8,7 @@ import {
   ERROR_FILE_NAME,
   OUTPUT_TO_CONSOLE_IN_PRODUCTION,
   OUTPUT_TO_CONSOLE_IN_DEVELOPMENT,
+  SHORT_LOG_CONSOLE,
 } from '../config';
 import getTrackingLevel from './get_tracking_level';
 import setLogFalePath from './setLogFalePath';
@@ -22,13 +23,25 @@ const targetsOptions: ITargetsOptions = {
   prettyTarget: {
     level: getTrackingLevel(),
     target: 'pino-pretty',
-    options: { colorize: true },
+    options: SHORT_LOG_CONSOLE
+      ? {
+          colorize: true,
+          hideObject: true,
+          ignore: 'pid,hostname',
+        }
+      : {
+          colorize: true,
+        },
   },
 
   logTarget: {
     level: getTrackingLevel(),
     target: 'pino/file',
-    options: { destination: setLogFalePath(LOG_FILE_NAME), mkdir: true },
+    options: {
+      destination: setLogFalePath(LOG_FILE_NAME),
+      mkdir: true,
+      ignore: 'msg',
+    },
   },
 
   errorTarget: {

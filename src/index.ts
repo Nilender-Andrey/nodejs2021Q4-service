@@ -10,12 +10,14 @@ import checkStartupSettings from './utils/check_startup_settings';
 import setErrorHandler from './error_handler/set_error_handler';
 import getTrackingLevel from './logger/helpers/get_tracking_level';
 import parsedBodyForLogger from './logger/helpers/parsed_body_for_logger';
+import connectionDb from './bd/connection';
 
 const server: ServerType = fastify({
   logger: pino,
 });
 
-server.after(() => {
+server.after(async () => {
+  await connectionDb(server);
   checkStartupSettings(server);
   setErrorHandler(server);
   server.log.debug(`Logging level: ${getTrackingLevel()}`);
