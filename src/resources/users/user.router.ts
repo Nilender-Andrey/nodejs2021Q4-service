@@ -123,7 +123,7 @@ interface boardRequest {
  */
 
 const userRoutes: fastify.FastifyPluginAsync = async (
-  server
+  server,
 ): Promise<void> => {
   server.get('/users', getUsersOpts);
 

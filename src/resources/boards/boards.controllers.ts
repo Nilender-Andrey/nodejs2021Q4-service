@@ -1,7 +1,6 @@
 import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
-import boardsDB from '../../bd/boards';
-import tasksDB from '../../bd/tasks';
-import { IBoard } from '../../types/types';
+import DataBaseError from '../../bd/database_error';
+import Columns from '../column/column.model';
 import Board from './boards.model';
 
 /**
@@ -9,9 +8,17 @@ import Board from './boards.model';
  * @param req - request to the server
  * @param res - server response
  */
-const getBoards = (req: FastifyRequest, res: FastifyReply): void => {
-  // throw new Error('Test');
-  res.send(boardsDB.getBd());
+
+const getBoards = async (
+  req: FastifyRequest,
+  res: FastifyReply,
+): Promise<void> => {
+  try {
+    const boards = await Board.find({ relations: ['columns'] });
+    res.send(boards).log.debug(`Boards received from the base`);
+  } catch (error) {
+    throw new DataBaseError(error);
+  }
 };
 
 interface BoardReqGet extends RequestGenericInterface {
@@ -26,23 +33,37 @@ interface BoardReqGet extends RequestGenericInterface {
  * @param res - server response
  */
 
-const getBoard = (req: BoardReqGet, res: FastifyReply): void => {
-  const { boardId } = req.params;
-  if (boardId) {
-    const board = boardsDB.findOne('id', boardId);
+const getBoard = async (req: BoardReqGet, res: FastifyReply): Promise<void> => {
+  try {
+    const { boardId } = req.params;
+    const board = await Board.findOne(boardId, { relations: ['columns'] });
 
     if (board) {
-      res.send(board);
-    } else {
-      res.status(404).send(`Board ${boardId} is not found`);
-    }
+      const result =
+        board.columns === null
+          ? board
+          : {
+              ...board,
+              columns: board.columns?.map((item) => ({ ...item })),
+            };
+
+      res
+        .send(result)
+        .log.debug(`Boards id: ${boardId} received from the base`);
+    } else
+      res
+        .status(404)
+        .send(`Board id:${boardId} is not found`)
+        .log.debug(`Board id:${boardId} is not found`);
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
 interface BoardReqAdd extends RequestGenericInterface {
   body: {
     title: string;
-    columns: { order: number; title: string }[];
+    columns: Columns[];
   };
 }
 
@@ -52,12 +73,24 @@ interface BoardReqAdd extends RequestGenericInterface {
  * @param res - server response
  */
 
-const addBoard = (req: BoardReqAdd, res: FastifyReply): void => {
-  const { title, columns } = req.body;
-  const newBoard = new Board(title, columns);
+const addBoard = async (req: BoardReqAdd, res: FastifyReply): Promise<void> => {
+  try {
+    const { title, columns } = req.body;
 
-  boardsDB.add(newBoard);
-  res.code(201).send(newBoard);
+    const newBoard = new Board(title);
+
+    const newColumns = columns.map(
+      (item) => new Columns(item.order, item.title, newBoard),
+    );
+
+    await Board.save(newBoard);
+    await Columns.save(newColumns);
+    const board = await Board.findOne(newBoard.id, { relations: ['columns'] });
+
+    res.code(201).send(board).log.debug(`New board saved`);
+  } catch (error) {
+    throw new DataBaseError(error);
+  }
 };
 
 interface BoardReqPut extends RequestGenericInterface {
@@ -66,7 +99,7 @@ interface BoardReqPut extends RequestGenericInterface {
   };
   body: {
     title?: string;
-    columns?: { id: string; order: number; title: string }[];
+    columns?: Columns[];
   };
 }
 
@@ -76,23 +109,27 @@ interface BoardReqPut extends RequestGenericInterface {
  * @param res - server response
  */
 
-const putBoard = (req: BoardReqPut, res: FastifyReply): void => {
-  const { boardId } = req.params;
-  const board = boardsDB.findOne('id', boardId);
+const putBoard = async (req: BoardReqPut, res: FastifyReply): Promise<void> => {
+  try {
+    const { boardId } = req.params;
+    const { title /* columns  */ } = req.body;
+    const board = await Board.findOne(boardId, { relations: ['columns'] });
 
-  if (board) {
-    const { title, columns } = req.body;
-    const newBoard: IBoard = {
-      id: board.id,
-      title: title || board.title,
-      columns: columns || board.columns,
-    };
+    if (board) {
+      board.title = title || board.title;
 
-    boardsDB.change('id', boardId, newBoard);
+      await Board.save(board);
 
-    res.send(newBoard);
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+      res.send(board);
+      // .log.debug(`Board id:${boardId} has been changed`);
+    } else {
+      res
+        .status(404)
+        .send(`Board id:${boardId} is not found`)
+        .log.debug(`Board id:${boardId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -108,17 +145,28 @@ interface BoardReqDelete extends RequestGenericInterface {
  * @param res - server response
  */
 
-const deleteBoard = (req: BoardReqDelete, res: FastifyReply): void => {
-  const { boardId } = req.params;
-  const board = boardsDB.findOne('id', boardId);
+const deleteBoard = async (
+  req: BoardReqDelete,
+  res: FastifyReply,
+): Promise<void> => {
+  try {
+    const { boardId } = req.params;
+    const board = await Board.findOne(boardId);
 
-  if (board) {
-    boardsDB.delete('id', boardId);
-    tasksDB.delete('id', boardId);
+    if (board) {
+      await Board.remove(board);
 
-    res.send({ message: `Board ${boardId} has been removed` });
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+      res
+        .send({ message: `Board id:${boardId} has been removed` })
+        .log.debug(`Board id:${boardId} has been removed`);
+    } else {
+      res
+        .status(404)
+        .send(`Board id:${boardId} is not found`)
+        .log.warn(`Board id:${boardId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 

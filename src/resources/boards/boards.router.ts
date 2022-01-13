@@ -1,4 +1,5 @@
 import * as fastify from 'fastify';
+import Columns from '../column/column.model';
 
 import {
   addBoard,
@@ -82,17 +83,7 @@ const putBoardOpts = {
     params: paramsSсhema,
     body: bodySсhema,
     response: {
-      200: {
-        type: 'object',
-        titleBoard: { type: 'string' },
-        columns: {
-          type: 'array',
-          items: {
-            order: { type: 'number' },
-            title: { type: 'string' },
-          },
-        },
-      },
+      200: boardSсhema,
     },
   },
   handler: putBoard,
@@ -119,7 +110,7 @@ interface IParams {
 
 interface IBody {
   title: string;
-  columns: { id: string; order: number; title: string }[];
+  columns: Columns[];
 }
 
 interface boardRequest {
@@ -133,7 +124,7 @@ interface boardRequest {
  */
 
 const boardRoutes: fastify.FastifyPluginAsync = async (
-  server
+  server,
 ): Promise<void> => {
   server.get('/boards', getBoardsOpts);
 

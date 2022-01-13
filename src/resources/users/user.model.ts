@@ -1,14 +1,25 @@
+import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from '../../types/types';
 
 /** The class to create a user instance */
-class User {
+@Entity()
+class User extends BaseEntity {
+  @PrimaryColumn()
   id: string;
 
+  @Column({
+    length: 50,
+  })
   name: string;
 
+  @Column({
+    length: 50,
+  })
   login: string;
 
+  @Column({
+    length: 50,
+  })
   password: string;
 
   /**
@@ -20,15 +31,11 @@ class User {
    */
 
   constructor(name: string, login: string, password: string) {
+    super();
     this.id = uuidv4();
     this.name = name;
     this.login = login;
     this.password = password;
-  }
-
-  static toResponse(user: IUser) {
-    const { id, name, login } = user;
-    return { id, name, login };
   }
 }
 

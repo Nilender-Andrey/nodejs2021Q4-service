@@ -1,25 +1,35 @@
 import { FastifyReply, RequestGenericInterface } from 'fastify';
-import boardsDB from '../../bd/boards';
-import tasksDB from '../../bd/tasks';
+import DataBaseError from '../../bd/database_error';
+import Board from '../boards/boards.model';
+import User from '../users/user.model';
+// import User from '../users/user.model';
 import Task from './task.model';
 
+const getUser = async (id: string | null) => {
+  if (typeof id === 'string') {
+    const user = await User.findOne(id);
+    return user === undefined ? null : user;
+  }
+  return null;
+};
 interface TasksReqGet extends RequestGenericInterface {
   params: {
     boardId: string;
   };
 }
 
-/**
- * Get all tasks from the database and return with a response
- * @param req - request to the server
- * @param res - server response
- */
-
-const getTasks = (req: TasksReqGet, res: FastifyReply): void => {
-  const { boardId } = req.params;
-  const allTasksInBoard = tasksDB.findAll('boardId', boardId);
-
-  res.send(allTasksInBoard);
+const getTasks = async (req: TasksReqGet, res: FastifyReply): Promise<void> => {
+  try {
+    const { boardId } = req.params;
+    const tasks = await Task.find({
+      relations: ['user', 'board'],
+      where: { boardId },
+    });
+    console.log(tasks);
+    res.send(tasks).log.debug(`Tasks received from the base`);
+  } catch (error) {
+    throw new DataBaseError(error);
+  }
 };
 
 interface TaskReqGet extends RequestGenericInterface {
@@ -29,27 +39,23 @@ interface TaskReqGet extends RequestGenericInterface {
   };
 }
 
-/**
- * Get one task from the database and return with a response
- * @param req - request to the server
- * @param res - server response
- */
-
-const getTask = (req: TaskReqGet, res: FastifyReply): void => {
-  const { boardId, taskId } = req.params;
-  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
-
-  if (thereIsSuchBoard) {
-    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
-    const task = allTasksInBoard.find((t) => t.id === taskId);
+const getTask = async (req: TaskReqGet, res: FastifyReply): Promise<void> => {
+  try {
+    const { boardId, taskId } = req.params;
+    const task = await Task.findOne({
+      where: { boardId, id: taskId },
+    });
 
     if (task) {
-      res.send(task);
+      res.send(task).log.debug(`Task id: ${taskId} received from the base`);
     } else {
-      res.status(404).send(`Task ${taskId} not found in the board ${boardId}`);
+      res
+        .status(404)
+        .send(`Task ${taskId} not found in the board ${boardId}`)
+        .log.debug(`Task ${taskId} not found in the board ${boardId}`);
     }
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -62,38 +68,42 @@ interface TaskReqAdd extends RequestGenericInterface {
     title: string;
     order: number;
     description: string;
+    columnId: string | null;
     userId: string | null;
     boardId: string;
-    columnId: string | null;
   };
 }
 
-/**
- * Adds task to the database and returns it with a response
- * @param req - request to the server
- * @param res - server response
- */
+const addTask = async (req: TaskReqAdd, res: FastifyReply): Promise<void> => {
+  try {
+    const { boardId } = req.params;
+    const board = await Board.findOne(boardId);
 
-const addTask = (req: TaskReqAdd, res: FastifyReply): void => {
-  const { boardId } = req.params;
-  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
+    if (board) {
+      const { title, order, description, userId, columnId } = req.body;
 
-  if (thereIsSuchBoard) {
-    const { title, order, description, userId, columnId } = req.body;
+      const user = await getUser(userId);
 
-    const newTask = new Task(
-      title,
-      order,
-      description,
-      userId,
-      boardId,
-      columnId
-    );
+      const newTask = new Task(
+        title,
+        order,
+        description,
+        columnId,
+        // board.id,
+        board,
+        user,
+      );
 
-    tasksDB.add(newTask);
-    res.code(201).send(newTask);
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+      await Task.save(newTask);
+      res.code(201).send(newTask).log.debug(`New task saved`);
+    } else {
+      res
+        .status(404)
+        .send(`Board ${boardId} is not found`)
+        .log.debug(`Board id:${boardId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -112,40 +122,33 @@ interface TaskReqPut extends RequestGenericInterface {
   };
 }
 
-/**
- * Modifies task to the database and returns it with a response
- * @param req - request to the server
- * @param res - server response
- */
-
-const putTask = (req: TaskReqPut, res: FastifyReply): void => {
-  const { taskId, boardId } = req.params;
-  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
-
-  if (thereIsSuchBoard) {
-    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
-    const task = allTasksInBoard.find((t) => t.id === taskId);
+const putTask = async (req: TaskReqPut, res: FastifyReply): Promise<void> => {
+  try {
+    const { taskId, boardId } = req.params;
+    const task = await Task.findOne(taskId);
 
     if (task) {
       const { title, order, description, userId, columnId } = req.body;
-      const newTask = {
-        id: task.id,
-        title: title || task.title,
-        order: order || task.order,
-        description: description || task.description,
-        userId: userId || task.userId,
-        boardId: boardId || task.boardId,
-        columnId: columnId || task.columnId,
-      };
 
-      tasksDB.change('id', taskId, newTask);
+      const user = userId === null ? null : await getUser(userId);
 
-      res.send(newTask);
+      task.title = title || task.title;
+      task.order = order || task.order;
+      task.description = description || task.description;
+      task.user = user;
+      task.columnId = columnId || task.columnId;
+
+      await Task.save(task);
+
+      res.send(task).log.debug(`Task id: ${taskId} has been changed`);
     } else {
-      res.status(404).send(`Task ${taskId} not found in the board ${boardId}`);
+      res
+        .status(404)
+        .send(`Task ${taskId} not found in the board ${boardId}`)
+        .log.debug(`Task ${taskId} not found in the board ${boardId}`);
     }
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -156,29 +159,27 @@ interface TaskReqDelete extends RequestGenericInterface {
   };
 }
 
-/**
- * Removes the task from the database
- * @param req - request to the server
- * @param res - server response
- */
-
-const deleteTasks = (req: TaskReqDelete, res: FastifyReply): void => {
-  const { taskId, boardId } = req.params;
-  const thereIsSuchBoard = boardsDB.findOne('id', boardId);
-
-  if (thereIsSuchBoard) {
-    const allTasksInBoard = tasksDB.findAll('boardId', boardId);
-
-    const task = allTasksInBoard.find((t) => t.id === taskId);
+const deleteTasks = async (
+  req: TaskReqDelete,
+  res: FastifyReply,
+): Promise<void> => {
+  try {
+    const { taskId, boardId } = req.params;
+    const task = await Task.findOne(taskId);
 
     if (task) {
-      tasksDB.delete('id', taskId);
-      res.send({ message: `task ${taskId} has been removed` });
+      await Task.remove(task);
+      res
+        .send({ message: `task ${taskId} has been removed` })
+        .log.debug(`Task ${taskId} has been removed`);
     } else {
-      res.status(404).send(`Task ${taskId} not found in the board ${boardId}`);
+      res
+        .status(404)
+        .send(`Task ${taskId} not found in the board ${boardId}`)
+        .log.debug(`Task ${taskId} not found in the board ${boardId}`);
     }
-  } else {
-    res.status(404).send(`Board ${boardId} is not found`);
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 

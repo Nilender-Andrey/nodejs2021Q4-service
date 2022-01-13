@@ -1,28 +1,31 @@
+import { Entity, Column, BaseEntity, PrimaryColumn, OneToMany } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { Entity } from 'typeorm';
-import { ColumnArgType } from '../../types/types';
-import Column from '../column/column.model';
+import Columns from '../column/column.model';
 
-/**  The class to create a board instance */
+export interface IColumns {
+  id: string;
+  order: number;
+  title: string;
+}
+
 @Entity()
-class Board {
+class Board extends BaseEntity {
+  @PrimaryColumn()
   id: string;
 
-  columns: Column[];
-
+  @Column({
+    length: 100,
+  })
   title: string;
 
-  /**
-   * to create a board
-   * @param columns - array of data to create columns
-   * @param title - board name
-   * @returns board object
-   */
+  @OneToMany(() => Columns, (columns) => columns.board)
+  columns: Columns[] | undefined;
 
-  constructor(title: string, columns: ColumnArgType[]) {
+  constructor(title: string, columns?: Columns[]) {
+    super();
     this.id = uuidv4();
     this.title = title;
-    this.columns = columns.map((c) => new Column(c.order, c.title));
+    this.columns = columns;
   }
 }
 

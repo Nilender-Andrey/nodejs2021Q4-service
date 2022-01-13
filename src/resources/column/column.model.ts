@@ -1,25 +1,42 @@
 import { v4 as uuidv4 } from 'uuid';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  BaseEntity,
+  PrimaryColumn,
+  JoinColumn,
+} from 'typeorm';
 
-/**  The class to create a сolumn instance */
-class Column {
-  order: number;
-
+export interface IBoard {
+  id: string;
   title: string;
+}
 
+@Entity()
+class Columns extends BaseEntity {
+  @PrimaryColumn()
   id: string;
 
-  /**
-   * to create a сolumn
-   * @param title - сolumn name
-   * @param order - importance of the сolumn
-   * @returns сolumn
-   */
+  @Column()
+  order: number;
 
-  constructor(order: number, title: string) {
+  @Column({
+    length: 100,
+  })
+  title: string;
+
+  @ManyToOne('Board', 'board', { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'board_id', referencedColumnName: 'id' })
+  board: IBoard;
+
+  constructor(order: number, title: string, board: IBoard) {
+    super();
     this.id = uuidv4();
     this.order = order;
     this.title = title;
+    this.board = board;
   }
 }
 
-export default Column;
+export default Columns;

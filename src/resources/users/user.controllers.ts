@@ -1,7 +1,5 @@
 import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
-
-import tasksDB from '../../bd/tasks';
-import usersDB from '../../bd/users';
+import DataBaseError from '../../bd/database_error';
 import User from './user.model';
 
 /**
@@ -10,8 +8,13 @@ import User from './user.model';
  * @param res - server response
  */
 
-const getUsers = (req: FastifyRequest, res: FastifyReply) => {
-  res.send(usersDB.getBd());
+const getUsers = async (req: FastifyRequest, res: FastifyReply) => {
+  try {
+    const users = await User.find();
+    res.send(users).log.debug(`Users received from the base`);
+  } catch (error) {
+    throw new DataBaseError(error);
+  }
 };
 
 interface UserReqGet extends RequestGenericInterface {
@@ -26,14 +29,18 @@ interface UserReqGet extends RequestGenericInterface {
  * @param res - server response
  */
 
-const getUser = (req: UserReqGet, res: FastifyReply) => {
-  const { userId } = req.params;
-  const user = usersDB.findOne('id', userId);
+const getUser = async (req: UserReqGet, res: FastifyReply) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne(userId);
 
-  if (user) {
-    res.send(user);
-  } else {
-    res.status(404).send(`User ${userId} is not found`);
+    if (user) {
+      res.send(user).log.debug(`User id:${userId} received from the base`);
+    } else {
+      res.status(404).send(`User id:${userId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -51,12 +58,17 @@ interface UserReqAdd extends RequestGenericInterface {
  * @param res - server response
  */
 
-const addUser = (req: UserReqAdd, res: FastifyReply) => {
-  const { name, login, password } = req.body;
-  const newUser = new User(name, login, password);
-  usersDB.add(newUser);
+const addUser = async (req: UserReqAdd, res: FastifyReply) => {
+  try {
+    const { name, login, password } = req.body;
+    const newUser = new User(name, login, password);
 
-  res.code(201).send(newUser);
+    await User.save(newUser);
+
+    res.code(201).send(newUser).log.debug(`New user saved`);
+  } catch (error) {
+    throw new DataBaseError(error);
+  }
 };
 
 interface UserReqPut extends RequestGenericInterface {
@@ -76,23 +88,28 @@ interface UserReqPut extends RequestGenericInterface {
  * @param res - server response
  */
 
-const putUser = (req: UserReqPut, res: FastifyReply) => {
-  const { userId } = req.params;
-  const { name, login, password } = req.body;
-  const user = usersDB.findOne('id', userId);
+const putUser = async (req: UserReqPut, res: FastifyReply) => {
+  try {
+    const { userId } = req.params;
+    const { name, login, password } = req.body;
+    const user = await User.findOne(userId);
 
-  if (user) {
-    const newUser = {
-      id: user.id,
-      name: name || user.name,
-      login: login || user.login,
-      password: password || user.password,
-    };
-    usersDB.change('id', userId, newUser);
+    if (user) {
+      user.name = name || user.name;
+      user.login = login || user.login;
+      user.password = password || user.password;
 
-    res.send(newUser);
-  } else {
-    res.status(404).send(`User ${userId} is not found`);
+      await User.save(user);
+
+      res.send(user).log.debug(`Board id:${userId} has been removed`);
+    } else {
+      res
+        .status(404)
+        .send(`User id:${userId} is not found`)
+        .log.debug(`User id:${userId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 
@@ -108,22 +125,22 @@ interface UserReqDelete extends RequestGenericInterface {
  * @param res - server response
  */
 
-const deleteUsers = (req: UserReqDelete, res: FastifyReply) => {
-  const { userId } = req.params;
-  const user = usersDB.findOne('id', userId);
+const deleteUsers = async (req: UserReqDelete, res: FastifyReply) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findOne(userId);
 
-  if (user) {
-    usersDB.delete('id', userId);
+    if (user) {
+      await User.remove(user);
 
-    tasksDB.getBd().forEach((t) => {
-      if (t.userId === userId) {
-        tasksDB.change('userId', userId, { ...t, userId: null });
-      }
-    });
-
-    res.send({ message: `User ${userId} has been removed` });
-  } else {
-    res.status(404).send(`User ${userId} is not found`);
+      res
+        .send({ message: `User id:${userId} has been removed` })
+        .log.debug(`User id:${userId} has been removed`);
+    } else {
+      res.status(404).send(`User ${userId} is not found`);
+    }
+  } catch (error) {
+    throw new DataBaseError(error);
   }
 };
 

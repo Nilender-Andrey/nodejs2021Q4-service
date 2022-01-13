@@ -2,7 +2,7 @@ import { Server, IncomingMessage, ServerResponse } from 'http';
 import { FastifyInstance, FastifyLoggerInstance } from 'fastify';
 
 export interface IColumn {
-  id: string;
+  id: number;
   order: number;
   title: string;
 }
@@ -12,7 +12,7 @@ export type ColumnArgType = {
 };
 
 export interface IUser {
-  id: string;
+  id: number;
   name: string;
   login: string;
   password: string;
@@ -21,7 +21,7 @@ export interface IUser {
 export interface IBoard {
   id: string;
   title: string;
-  columns?: IColumn[];
+  columns?: ColumnArgType[];
 }
 export type BoardArgType = {
   title: string;
@@ -29,13 +29,13 @@ export type BoardArgType = {
 };
 
 export interface ITask {
-  id: string;
+  id: number;
   title: string;
   order: number;
   description: string;
-  userId: string | null;
-  boardId: string;
-  columnId: string | null;
+  userId: number | null;
+  boardId: number;
+  columnId: number | null;
 }
 
 export type ServerType = FastifyInstance<

@@ -110,7 +110,7 @@ interface boardRequest {
  */
 
 const taskRoutes: fastify.FastifyPluginAsync = async (
-  server
+  server,
 ): Promise<void> => {
   server.get<boardRequest>('/boards/:boardId/tasks', getTasksOpts);
 

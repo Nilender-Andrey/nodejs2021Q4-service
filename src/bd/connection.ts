@@ -6,6 +6,11 @@ import {
   POSTGRES_PORT,
   POSTGRES_USER,
 } from '../common/config';
+import Board from '../resources/boards/boards.model';
+import Columns from '../resources/column/column.model';
+import Task from '../resources/task/task.model';
+import User from '../resources/users/user.model';
+
 import { ServerType } from '../types/types';
 
 const connectionDb = async (server: ServerType) => {
@@ -17,12 +22,15 @@ const connectionDb = async (server: ServerType) => {
       username: POSTGRES_USER,
       password: POSTGRES_PASSWORD,
       database: POSTGRES_DB,
-      name: POSTGRES_USER,
+
+      entities: [Board, User, Task, Columns],
+      synchronize: true,
+      logging: false,
     });
-    server.log.info(`Database "${POSTGRES_DB}" connected`);
+    server.log.info(`Database connected`);
   } catch (error) {
-    server.log.error(`Failed to connect to database. ${error}`);
-    // process.exit(1);
+    server.log.error(error);
+    throw new Error(`Failed to connect to database`);
   }
 };
 
