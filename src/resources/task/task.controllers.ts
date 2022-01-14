@@ -25,7 +25,6 @@ const getTasks = async (req: TasksReqGet, res: FastifyReply): Promise<void> => {
       relations: ['user', 'board'],
       where: { boardId },
     });
-    console.log(tasks);
     res.send(tasks).log.debug(`Tasks received from the base`);
   } catch (error) {
     throw new DataBaseError(error);

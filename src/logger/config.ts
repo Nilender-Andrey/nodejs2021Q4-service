@@ -3,7 +3,7 @@ const LOG_ERRORS_IN_ERROR_FILE: true | false = true;
 const WRITING_LOG_TO_FILE: true | false = true;
 const OUTPUT_TO_CONSOLE_IN_PRODUCTION: true | false = false;
 const ADD_BODY_TO_LOG: true | false = true;
-const SHORT_LOG_CONSOLE: true | false = false;
+const SHORT_LOG_CONSOLE: true | false = true;
 
 const LOG_FILE_NAME = './../log/file.log';
 const ERROR_FILE_NAME = './../log/error.log';
