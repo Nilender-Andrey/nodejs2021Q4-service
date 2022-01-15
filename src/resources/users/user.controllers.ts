@@ -1,6 +1,12 @@
-import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import DataBaseError from '../../bd/database_error';
 import User from './user.model';
+import {
+  UserReqAdd,
+  UserReqDelete,
+  UserReqGet,
+  UserReqPut,
+} from './user.types';
 
 /**
  * Get all users from the database and return with a response
@@ -17,14 +23,8 @@ const getUsers = async (req: FastifyRequest, res: FastifyReply) => {
   }
 };
 
-interface UserReqGet extends RequestGenericInterface {
-  params: {
-    userId: string;
-  };
-}
-
 /**
- * Get one users from the database and return with a response
+ * Get one user from the database and return with a response
  * @param req - request to the server
  * @param res - server response
  */
@@ -44,14 +44,6 @@ const getUser = async (req: UserReqGet, res: FastifyReply) => {
   }
 };
 
-interface UserReqAdd extends RequestGenericInterface {
-  body: {
-    name: string;
-    login: string;
-    password: string;
-  };
-}
-
 /**
  * Add user to the database and returns it with a response
  * @param req - request to the server
@@ -70,17 +62,6 @@ const addUser = async (req: UserReqAdd, res: FastifyReply) => {
     throw new DataBaseError(error);
   }
 };
-
-interface UserReqPut extends RequestGenericInterface {
-  params: {
-    userId: string;
-  };
-  body: {
-    name?: string;
-    login?: string;
-    password?: string;
-  };
-}
 
 /**
  * Modifies user to the database and returns it with a response
@@ -112,12 +93,6 @@ const putUser = async (req: UserReqPut, res: FastifyReply) => {
     throw new DataBaseError(error);
   }
 };
-
-interface UserReqDelete extends RequestGenericInterface {
-  params: {
-    userId: string;
-  };
-}
 
 /**
  * Removes the user from the database and installs null on all his tasks

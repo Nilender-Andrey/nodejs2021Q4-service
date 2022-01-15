@@ -1,22 +1,35 @@
-import { FastifyReply, RequestGenericInterface } from 'fastify';
+import { FastifyReply } from 'fastify';
 import DataBaseError from '../../bd/database_error';
 import Board from '../boards/boards.model';
 import User from '../users/user.model';
-// import User from '../users/user.model';
 import Task from './task.model';
+import {
+  TaskReqAdd,
+  TaskReqDelete,
+  TaskReqGet,
+  TaskReqPut,
+  TasksReqGet,
+} from './task.types';
 
-const getUser = async (id: string | null) => {
+/**
+ * Gets the user depending on id
+ * @param id - id or null
+ * @returns user from the database or null
+ */
+
+const getUser = async (id: string | null): Promise<User | null> => {
   if (typeof id === 'string') {
     const user = await User.findOne(id);
     return user === undefined ? null : user;
   }
   return null;
 };
-interface TasksReqGet extends RequestGenericInterface {
-  params: {
-    boardId: string;
-  };
-}
+
+/**
+ * Get all tasks from the database and return with a response
+ * @param req - request to the server
+ * @param res - server response
+ */
 
 const getTasks = async (req: TasksReqGet, res: FastifyReply): Promise<void> => {
   try {
@@ -31,12 +44,11 @@ const getTasks = async (req: TasksReqGet, res: FastifyReply): Promise<void> => {
   }
 };
 
-interface TaskReqGet extends RequestGenericInterface {
-  params: {
-    boardId: string;
-    taskId: string;
-  };
-}
+/**
+ * Get one task from the database and return with a response
+ * @param req - request to the server
+ * @param res - server response
+ */
 
 const getTask = async (req: TaskReqGet, res: FastifyReply): Promise<void> => {
   try {
@@ -58,20 +70,11 @@ const getTask = async (req: TaskReqGet, res: FastifyReply): Promise<void> => {
   }
 };
 
-interface TaskReqAdd extends RequestGenericInterface {
-  params: {
-    boardId: string;
-    taskId: string;
-  };
-  body: {
-    title: string;
-    order: number;
-    description: string;
-    columnId: string | null;
-    userId: string | null;
-    boardId: string;
-  };
-}
+/**
+ * Add task to the database and returns it with a response
+ * @param req - request to the server
+ * @param res - server response
+ */
 
 const addTask = async (req: TaskReqAdd, res: FastifyReply): Promise<void> => {
   try {
@@ -88,7 +91,6 @@ const addTask = async (req: TaskReqAdd, res: FastifyReply): Promise<void> => {
         order,
         description,
         columnId,
-        // board.id,
         board,
         user,
       );
@@ -106,20 +108,11 @@ const addTask = async (req: TaskReqAdd, res: FastifyReply): Promise<void> => {
   }
 };
 
-interface TaskReqPut extends RequestGenericInterface {
-  params: {
-    boardId: string;
-    taskId: string;
-  };
-  body: {
-    title: string;
-    order: number;
-    description: string;
-    userId: string | null;
-    boardId: string;
-    columnId: string | null;
-  };
-}
+/**
+ * Modifies task to the database and returns it with a response
+ * @param req - request to the server
+ * @param res - server response
+ */
 
 const putTask = async (req: TaskReqPut, res: FastifyReply): Promise<void> => {
   try {
@@ -151,12 +144,11 @@ const putTask = async (req: TaskReqPut, res: FastifyReply): Promise<void> => {
   }
 };
 
-interface TaskReqDelete extends RequestGenericInterface {
-  params: {
-    boardId: string;
-    taskId: string;
-  };
-}
+/**
+ * Removes the task from the database and installs null on all his tasks
+ * @param req - request to the server
+ * @param res - server response
+ */
 
 const deleteTasks = async (
   req: TaskReqDelete,

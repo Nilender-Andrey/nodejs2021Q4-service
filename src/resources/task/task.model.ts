@@ -36,14 +36,14 @@ class Task extends BaseEntity {
   userId: string | null;
 
   @ManyToOne(() => User, (task) => task.id, { onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'userId' /* , referencedColumnName: 'id' */ })
+  @JoinColumn({ name: 'userId' })
   user: User | null;
 
   @Column()
   boardId: string;
 
   @ManyToOne(() => Board, (board) => board.id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'boardId' /* , referencedColumnName: 'id' */ })
+  @JoinColumn({ name: 'boardId' })
   board: Board;
 
   @Column({
