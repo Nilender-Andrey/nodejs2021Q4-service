@@ -8,7 +8,12 @@ const connectionDb = async (server: ServerType) => {
     server.log.info(`Database connected`);
   } catch (error) {
     server.log.error(error);
-    // throw new Error(`Failed to connect to database`);
+
+    if (process.env.WAIT_DB_CONNECTION) {
+      setTimeout(() => connectionDb(server), 5000);
+    } else {
+      throw new Error(`Failed to connect to database`);
+    }
   }
 };
 

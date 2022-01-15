@@ -1,3 +1,15 @@
+## Информация для проверки задания PostgreSQL & Typeorm:
+
+1. Клонируйте сборку
+   `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
+
+2. Установите зависимости `npm install`
+3. Запустите команду `npm run start:database_server_tests` должна запуститься база в docker-контейнере и за ней сервер
+4. Откройте новый терминал и запустите тесты npm test
+
+**Команду `npm run start:database_server_tests` собрал для удобства проверки, если она не сработала или вас не устроила все можно запустить по отдельности: базу данных `npm run start:database` или `docker compose up -d`, сервер `npm start`.
+Важно базу данных запустите первой. Если сервер запущен первым он ожидает подключения к БД делая запрос на подключение каждые 5 сек.**
+
 ## Run application with Docker
 
 1. install Docker
