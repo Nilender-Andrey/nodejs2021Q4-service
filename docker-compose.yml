@@ -1,32 +1,12 @@
 version: '3.8'
 
 services:
-  # server:
-  #   build: .
-  #   image: server:node_v16.13
-  #   container_name: fastify
-  #   restart: always
-  #   volumes:
-  #     - ./src:/app/src
-  #     - logs:/app/log
-  #   networks:
-  #     - my_network
-  #   ports:
-  #     - ${PORT}:${PORT}
-  #   depends_on:
-  #     - postgres
-  #   environment:
-  #     FLASK_ENV: ${NODE_ENV}
-
   postgres:
     image: 'postgres:v${POSTGRES_VERSION}'
     container_name: postgres
     build: ./database
     restart: always
-    # volumes:
-    #   - db_data:/var/lib/postgresql/data
-    # networks:
-    #   - my_network
+
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -34,9 +14,5 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
 
-networks:
-  my_network:
-
 volumes:
   db_data:
-  logs:
