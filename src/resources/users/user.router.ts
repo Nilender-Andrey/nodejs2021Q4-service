@@ -79,7 +79,7 @@ const putUserOpts = {
           id: { type: 'string' },
           name: { type: 'string' },
           login: { type: 'string' },
-          password: { type: 'string' },
+          //  password: { type: 'string' },
         },
       },
     },

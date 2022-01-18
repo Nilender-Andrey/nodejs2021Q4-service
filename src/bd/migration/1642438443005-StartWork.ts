@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class StartWork1642151371566 implements MigrationInterface {
-  name = 'StartWork1642151371566';
+export class StartWork1642438443005 implements MigrationInterface {
+  name = 'StartWork1642438443005';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -12,7 +12,7 @@ export class StartWork1642151371566 implements MigrationInterface {
       `CREATE TABLE "board" ("id" character varying NOT NULL, "title" character varying(100) NOT NULL, CONSTRAINT "PK_865a0f2e22c140d261b1df80eb1" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "user" ("id" character varying NOT NULL, "name" character varying(50) NOT NULL, "login" character varying(50) NOT NULL, "password" character varying(50) NOT NULL, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user" ("id" character varying NOT NULL, "name" character varying(50) NOT NULL, "login" character varying(50) NOT NULL, "password" character varying(100) NOT NULL, CONSTRAINT "UQ_a62473490b3e4578fd683235c5e" UNIQUE ("login"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "task" ("id" character varying NOT NULL, "title" character varying(100) NOT NULL, "order" integer NOT NULL, "description" text NOT NULL, "userId" character varying, "boardId" character varying NOT NULL, "columnId" text, CONSTRAINT "PK_fb213f79ee45060ba925ecd576e" PRIMARY KEY ("id"))`,

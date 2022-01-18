@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import DataBaseError from '../../bd/database_error';
+import getHashFromPassword from '../../utils/get_hash_from_password';
 import User from './user.model';
 import {
   UserReqAdd,
@@ -53,7 +54,10 @@ const getUser = async (req: UserReqGet, res: FastifyReply) => {
 const addUser = async (req: UserReqAdd, res: FastifyReply) => {
   try {
     const { name, login, password } = req.body;
-    const newUser = new User(name, login, password);
+
+    const hash = await getHashFromPassword(password);
+
+    const newUser = new User(name, login, hash);
 
     await User.save(newUser);
 
@@ -78,7 +82,10 @@ const putUser = async (req: UserReqPut, res: FastifyReply) => {
     if (user) {
       user.name = name || user.name;
       user.login = login || user.login;
-      user.password = password || user.password;
+
+      user.password = password
+        ? await getHashFromPassword(password)
+        : user.password;
 
       await User.save(user);
 

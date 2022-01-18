@@ -14,11 +14,12 @@ class User extends BaseEntity {
 
   @Column({
     length: 50,
+    unique: true,
   })
   login: string;
 
   @Column({
-    length: 50,
+    length: 100,
   })
   password: string;
 
