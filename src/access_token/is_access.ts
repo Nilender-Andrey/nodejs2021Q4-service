@@ -1,8 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import isValidHeader from './is_valid_header';
 
-// const PRIVATE_URL=['/boards', ]
-
 const NOT_PRIVATE_URL = ['/', '/login', '/doc'];
 
 const isAccess = (request: FastifyRequest, reply: FastifyReply) => {

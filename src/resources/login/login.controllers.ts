@@ -1,9 +1,15 @@
-import { FastifyReply } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import DataBaseError from '../../bd/database_error';
 import addToken from '../../access_token/add_web_token';
 import isValidPassword from '../../utils/is_valid_password';
 import User from '../users/user.model';
 import { IPostLoginReq } from './login.type';
+
+const getLogin = (req: FastifyRequest, res: FastifyReply) => {
+  res
+    .send(`From here, I'll give you the login page someday...`)
+    .log.debug(`Gave login page`);
+};
 
 const postLogin = async (
   req: IPostLoginReq,
@@ -41,4 +47,4 @@ const postLogin = async (
   }
 };
 
-export { postLogin };
+export { getLogin, postLogin };

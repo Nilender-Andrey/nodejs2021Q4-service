@@ -1,6 +1,11 @@
 import * as fastify from 'fastify';
-import { postLogin } from './login.controllers';
+import { getLogin, postLogin } from './login.controllers';
 import { ILoginReqBody } from './login.type';
+
+const getLoginOpts = {
+  schema: {},
+  handler: getLogin,
+};
 
 const postLoginOpts = {
   schema: {
@@ -28,6 +33,7 @@ const postLoginOpts = {
 const loginRoutes: fastify.FastifyPluginAsync = async (
   server,
 ): Promise<void> => {
+  server.get('/login', getLoginOpts);
   server.post<{ Body: ILoginReqBody }>('/login', postLoginOpts);
 };
 

@@ -14,6 +14,8 @@ import parsedBodyForLogger from './logger/helpers/parsed_body_for_logger';
 import connectionDb from './bd/connection';
 import addFirstUser from './utils/add_first_user';
 import isAccess from './access_token/is_access';
+import mainRoutes from './resources/main_route/main.router';
+import docRoutes from './resources/doc_route/doc.router';
 
 const server: ServerType = fastify({
   logger: pino,
@@ -38,5 +40,7 @@ server.register(userRoutes);
 server.register(boardRoutes);
 server.register(taskRoutes);
 server.register(loginRoutes);
+server.register(mainRoutes);
+server.register(docRoutes);
 
 export default server;
