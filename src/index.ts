@@ -7,12 +7,13 @@ import { pino } from './logger/logger';
 import { ServerType } from './types/types';
 import uncaughtExceptionListener from './listeners/uncaught_exception';
 import unhandledRejectionListener from './listeners/unhandled_rejection';
-import checkStartupSettings from './utils/check_startup_settings';
+import isValidStartupSettings from './utils/is_valid_startup_settings';
 import setErrorHandler from './error_handler/set_error_handler';
 import getTrackingLevel from './logger/helpers/get_tracking_level';
 import parsedBodyForLogger from './logger/helpers/parsed_body_for_logger';
 import connectionDb from './bd/connection';
 import addFirstUser from './utils/add_first_user';
+import isAccess from './access_token/is_access';
 
 const server: ServerType = fastify({
   logger: pino,
@@ -21,9 +22,12 @@ const server: ServerType = fastify({
 server.after(async () => {
   await connectionDb(server);
   await addFirstUser();
-  checkStartupSettings(server);
+  isValidStartupSettings(server);
   setErrorHandler(server);
   server.log.debug(`Logging level: ${getTrackingLevel()}`);
+  server.addHook('preValidation', async (request, reply) => {
+    isAccess(request, reply);
+  });
 });
 
 parsedBodyForLogger(server);
