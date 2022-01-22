@@ -6,7 +6,7 @@ const NOT_PRIVATE_URL = ['/', '/login', '/doc'];
 const isAccess = (request: FastifyRequest, reply: FastifyReply) => {
   const { url } = request;
 
-  if (!NOT_PRIVATE_URL.includes(url) && !isValidHeader(request)) {
+  if (!NOT_PRIVATE_URL.includes(url) && !isValidHeader(request, reply)) {
     reply
       .status(401)
       .send(`Please login`)

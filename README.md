@@ -1,14 +1,15 @@
-## Информация для проверки задания PostgreSQL & Typeorm:
+## Информация для проверки задания Authentification & JWT:
 
 1. Клонируйте сборку
-   `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
-
-2. Установите зависимости `npm install`
+   `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`, на ветку `git checkout Task-9.-Authentication_and_JWT`
+2. Установите зависимости `npm install` (т.к. база в docker-контейнере, программа локально)
 3. Запустите команду `npm run start:database_server` должна запуститься база в docker-контейнере и за ней сервер
-4. Откройте новый терминал и запустите тесты npm test
+4. Откройте новый терминал и запустите тесты `npm run test:auth`
 
 **Команду `npm run start:database_server` собрал для удобства проверки, если она не сработала или вас не устроила все можно запустить по отдельности: базу данных `npm run start:database` или `docker compose up -d`, сервер `npm start`.
 Важно базу данных запустите первой. Если сервер запущен первым он ожидает подключения к БД делая запрос на подключение каждые 5 сек.**
+
+Собирал и проверял на Windows 10 x64
 
 ## Run application with Docker
 
