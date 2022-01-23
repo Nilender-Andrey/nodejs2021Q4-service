@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { Not } from 'typeorm';
 import DataBaseError from '../../bd/database_error';
 import getHashFromPassword from '../../utils/get_hash_from_password';
 import User from './user.model';
@@ -55,13 +56,18 @@ const addUser = async (req: UserReqAdd, res: FastifyReply) => {
   try {
     const { name, login, password } = req.body;
 
-    const hash = await getHashFromPassword(password);
+    const isLoginBusy = await User.findOne({ login });
+    if (isLoginBusy) {
+      res.status(400).send(`User with "${login}" login already exists`);
+    } else {
+      const hash = await getHashFromPassword(password);
 
-    const newUser = new User(name, login, hash);
+      const newUser = new User(name, login, hash);
 
-    await User.save(newUser);
+      await User.save(newUser);
 
-    res.code(201).send(newUser).log.debug(`New user saved`);
+      res.code(201).send(newUser).log.debug(`New user saved`);
+    }
   } catch (error) {
     throw new DataBaseError(error);
   }
@@ -79,7 +85,10 @@ const putUser = async (req: UserReqPut, res: FastifyReply) => {
     const { name, login, password } = req.body;
     const user = await User.findOne(userId);
 
-    if (user) {
+    const isLoginBusy = await User.findOne({ login, id: Not(userId) });
+    if (isLoginBusy) {
+      res.status(400).send(`User with "${login}" login already exists`);
+    } else if (user) {
       user.name = name || user.name;
       user.login = login || user.login;
 
