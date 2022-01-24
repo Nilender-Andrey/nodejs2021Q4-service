@@ -1,90 +1,73 @@
-## Информация для проверки задания Authentification & JWT:
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
-1. Клонируйте сборку
-   `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`, на ветку `git checkout Task-9.-Authentication_and_JWT`
-2. Установите зависимости `npm install` (т.к. база в docker-контейнере, программа локально)
-3. Запустите команду `npm run start:database_server` должна запуститься база в docker-контейнере и за ней сервер
-4. Откройте новый терминал и запустите тесты `npm run test:auth`
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-**Команду `npm run start:database_server` собрал для удобства проверки, если она не сработала или вас не устроила все можно запустить по отдельности: базу данных `npm run start:database` или `docker compose up -d`, сервер `npm start`.
-Важно базу данных запустите первой. Если сервер запущен первым он ожидает подключения к БД делая запрос на подключение каждые 5 сек.**
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-Собирал и проверял на Windows 10 x64
+## Description
 
-## Run application with Docker
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-1. install Docker
-2. execute command `git clone https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
-3. go to the folder with the program copy
-4. open terminal with administrator rights
-5. run the `docker compose up` command to run the application
-6. to stop, run `docker compose down`
+## Installation
 
-# RS School REST service
-
-## Prerequisites
-
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
-## Downloading
-
-```
-git clone {repository URL}
-```
-
-## Installing NPM modules
-
-```
-npm install
+```bash
+$ npm install
 ```
 
-## Running application
+## Running the app
 
-```
-npm start
-```
+```bash
+# development
+$ npm run start
 
-## Testing
+# watch mode
+$ npm run start:dev
 
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm test
+# production mode
+$ npm run start:prod
 ```
 
-To run only one of all test suites (users, boards or tasks)
+## Test
 
-```
-npm test <suite name>
-```
+```bash
+# unit tests
+$ npm run test
 
-To run all test with authorization
+# e2e tests
+$ npm run test:e2e
 
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization (users, boards or tasks)
-
-```
-npm run test:auth <suite name>
+# test coverage
+$ npm run test:cov
 ```
 
-## Development
+## Support
 
-If you're using VSCode, you can get a better developer experience from integration with [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions.
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-### Auto-fix and format
+## Stay in touch
 
-```
-npm run lint
-```
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-### Debugging in VSCode
+## License
 
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+Nest is [MIT licensed](LICENSE).

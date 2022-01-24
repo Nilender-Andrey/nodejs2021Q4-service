@@ -1,51 +1,24 @@
 module.exports = {
-  env: {
-    browser: true,
-    commonjs: true,
-    es2021: true,
-    jest: true,
-    node: true,
-  },
-
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:import/typescript',
-    'plugin:node/recommended',
-    'eslint:recommended',
-    'airbnb-base',
-    'prettier',
-  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
+    project: 'tsconfig.json',
     sourceType: 'module',
-    ecmaVersion: 2021,
-    createDefaultProgram: true,
-    ecmaFeatures: {
-      impliedStrict: true,
-    },
   },
-  plugins: [
-    '@typescript-eslint',
-    'eslint-plugin-tsdoc',
-    '@typescript-eslint/tslint',
+  plugins: ['@typescript-eslint/eslint-plugin'],
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended',
   ],
-  rules: {
-    '@typescript-eslint/no-explicit-any': ['error'],
-    'tsdoc/syntax': 'error',
-    'import/extensions': 'off',
-    'linebreak-style': 'off',
-    'node/no-unsupported-features/es-syntax': 'off',
-    'no-underscore-dangle': 'off',
-    'import/prefer-default-export': 'off',
+  root: true,
+  env: {
+    node: true,
+    jest: true,
   },
-  settings: {
-    'import/resolver': {
-      typescript: {},
-    },
-    node: {
-      tryExtensions: ['.js', '.json', '.node', '.ts', '.d.ts'],
-    },
+  ignorePatterns: ['.eslintrc.js'],
+  rules: {
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };
