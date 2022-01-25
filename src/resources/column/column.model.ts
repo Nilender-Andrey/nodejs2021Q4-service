@@ -1,42 +1,31 @@
-/* import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Entity,
   Column,
   ManyToOne,
-  BaseEntity,
-  PrimaryColumn,
   JoinColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-*/
+
 export interface IBoard {
   id: string;
   title: string;
 }
 
-//@Entity()
-class Columns /* extends BaseEntity */ {
-  // @PrimaryColumn()
+@Entity()
+class Columns {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  //  @Column()
+  @Column()
   order: number;
 
-  /*   @Column({
-    length: 100,
-  }) */
+  @Column()
   title: string;
 
-  /* @ManyToOne('Board', 'board', { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'board_id', referencedColumnName: 'id' }) */
+  @ManyToOne('Board', 'board', { cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'board_id', referencedColumnName: 'id' })
   board: IBoard;
-
-  constructor(order: number, title: string, board: IBoard) {
-    /*  super(); */
-    this.id = '0';
-    this.order = order;
-    this.title = title;
-    this.board = board;
-  }
 }
 
 export default Columns;

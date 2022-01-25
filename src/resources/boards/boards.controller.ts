@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Controller('/boards')
 export class BoardsController {
@@ -30,8 +31,11 @@ export class BoardsController {
   }
 
   @Put(':boardId')
-  changeBoard(@Param('boardId') boardId: string) {
-    return this.boardsService.changeBoard(boardId);
+  changeBoard(
+    @Param('boardId') boardId: string,
+    @Body() updateBoardDto: UpdateBoardDto,
+  ) {
+    return this.boardsService.changeBoard(boardId, updateBoardDto);
   }
 
   @Delete(':boardId')
