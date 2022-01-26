@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
-    "start:docker_db": "docker-compose --env-file ./.development.env up"
+    "start:docker_db": "docker-compose --env-file ./.development.env up",
+    "stop:docker_db": "docker-compose --env-file ./.development.env  down --volume"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -28,6 +29,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.3",
+    "class-transformer": "^0.5.1",
     "cross-env": "^7.0.3",
     "dotenv": "^14.2.0",
     "pg": "^8.7.1",

@@ -26,10 +26,8 @@ export class BoardsService {
       relations: ['columns'],
     });
 
-    if (!board) {
-      if (!board)
-        throw new NotFoundException(`Board id: ${boardId} is not found`);
-    }
+    if (!board)
+      throw new NotFoundException(`Board id: ${boardId} is not found`);
 
     const result =
       board.columns === null

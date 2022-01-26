@@ -1,15 +1,18 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('/users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -30,8 +33,11 @@ export class UsersController {
   }
 
   @Put(':userId')
-  changeUser(@Param('userId') userId: string) {
-    return this.usersService.changeUser(userId);
+  changeUser(
+    @Param('userId') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.changeUser(userId, updateUserDto);
   }
 
   @Delete(':userId')
