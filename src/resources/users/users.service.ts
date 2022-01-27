@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import User from './users.model';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -27,10 +33,15 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
+    let applicant = await this.getLoginUser(createUserDto.login);
+
+    if (applicant)
+      throw new HttpException('Login busy', HttpStatus.BAD_REQUEST);
+
     const newUser = new User();
     newUser.name = createUserDto.name;
     newUser.login = createUserDto.login;
-    newUser.password = createUserDto.password;
+    newUser.password = await bcrypt.hash(createUserDto.password, 10);
 
     await this.userRepository.save(newUser);
 
@@ -42,10 +53,9 @@ export class UsersService {
 
     user.name = updateUserDto.name || user.name;
     user.login = updateUserDto.login || user.login;
-    user.password = updateUserDto.password || user.password;
-    /*  user.password = updateUserDto.password
-      ? await getHashFromPassword(updateUserDto.password)
-      : user.password; */
+    user.password = updateUserDto.password
+      ? await await bcrypt.hash(updateUserDto.password, 10)
+      : user.password;
 
     await this.userRepository.save(user);
 
@@ -59,5 +69,11 @@ export class UsersService {
     await this.userRepository.remove(user);
 
     return { message: `User id:${userId} has been removed` };
+  }
+
+  async getLoginUser(login: string) {
+    const user = await this.userRepository.findOne({ login });
+
+    return user;
   }
 }

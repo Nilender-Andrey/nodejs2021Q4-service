@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import Board from '../boards/boards.model';
 import User from '../users/users.model';
 import Task from './tasks.model';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board, User, Task])],
+  imports: [TypeOrmModule.forFeature([Board, User, Task]), AuthModule],
   providers: [TasksService],
   controllers: [TasksController],
 })

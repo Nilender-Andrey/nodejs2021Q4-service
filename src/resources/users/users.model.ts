@@ -20,7 +20,7 @@ class User {
   @Exclude()
   @Column({
     length: 100,
-    select: false,
+    /* select: false, */
   })
   password: string;
 }

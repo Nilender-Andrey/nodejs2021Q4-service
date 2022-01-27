@@ -1,4 +1,3 @@
-import { registerAs } from '@nestjs/config';
 import Board from 'src/resources/boards/boards.model';
 import Columns from 'src/resources/column/column.model';
 import Task from 'src/resources/tasks/tasks.model';
@@ -14,14 +13,14 @@ const dbConfig = (): ConnectionOptions => ({
   database: process.env.POSTGRES_DB,
 
   entities: [Board, Columns, User, Task],
-  synchronize: true,
+  synchronize: false,
   logging: true,
 
-  /* migrations: ['src/bd/migration/*.ts'],
-    cli: {
-      migrationsDir: 'src/bd/migration',
-    },
-    migrationsRun: true, */
+  migrations: ['dist/db/migration/*.js'],
+  cli: {
+    migrationsDir: 'src/db/migration',
+  },
+  migrationsRun: true,
 });
 
 export default dbConfig;
