@@ -2,7 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import Board from '../boards/boards.model';
+import { BoardsService } from '../boards/boards.service';
 import User from '../users/users.model';
+import { UsersService } from '../users/users.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import Task from './tasks.model';
@@ -11,8 +13,10 @@ import Task from './tasks.model';
 export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
-    @InjectRepository(Board) private boardRepository: Repository<Board>,
-    @InjectRepository(User) private userRepository: Repository<User>,
+    /*   @InjectRepository(Board) private boardRepository: Repository<Board>,
+    @InjectRepository(User) private userRepository: Repository<User>, */
+    private usersService: UsersService,
+    private boardsService: BoardsService,
   ) {}
 
   async getAllTasks(boardId: string) {
@@ -38,7 +42,7 @@ export class TasksService {
   }
 
   async createTask(boardId: string, createTaskDto: CreateTaskDto) {
-    const board = await this.boardRepository.findOne(boardId);
+    const board = await this.boardsService.getOneBoard(boardId);
 
     if (!board)
       throw new NotFoundException(`Board id: ${boardId} is not found`);
@@ -87,7 +91,7 @@ export class TasksService {
 
   private async _getUser(id: string | null): Promise<User | null> {
     if (typeof id === 'string') {
-      const user = await this.userRepository.findOne(id);
+      const user = await this.usersService.getOneUser(id);
 
       if (!user)
         throw new NotFoundException(`User id:${id} received from the base`);

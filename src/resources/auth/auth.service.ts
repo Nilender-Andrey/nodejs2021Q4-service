@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import User from '../users/users.model';
 import { UsersService } from '../users/users.service';
@@ -46,7 +42,7 @@ export class AuthService {
       }
     }
 
-    throw new UnauthorizedException({
+    throw new ForbiddenException({
       message: `User with the given username and password was not found`,
     });
   }

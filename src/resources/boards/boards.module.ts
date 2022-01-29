@@ -10,5 +10,6 @@ import { AuthModule } from '../auth/auth.module';
   imports: [TypeOrmModule.forFeature([Board, Columns]), AuthModule],
   providers: [BoardsService],
   controllers: [BoardsController],
+  exports: [BoardsService],
 })
 export class BoardsModule {}

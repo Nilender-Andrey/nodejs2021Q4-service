@@ -11,10 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [
     forwardRef(() => UsersModule),
     JwtModule.register({
-      secret: process.env.PRIVATE_KEY || 'TEST',
-      signOptions: {
-        expiresIn: '24h',
-      },
+      secret: `${process.env.JWT_SECRET_KEY}` || 'TEST',
     }),
   ],
 
