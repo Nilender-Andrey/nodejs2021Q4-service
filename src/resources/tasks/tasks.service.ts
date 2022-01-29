@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import Board from '../boards/boards.model';
 import { BoardsService } from '../boards/boards.service';
 import User from '../users/users.model';
 import { UsersService } from '../users/users.service';
@@ -13,8 +12,7 @@ import Task from './tasks.model';
 export class TasksService {
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
-    /*   @InjectRepository(Board) private boardRepository: Repository<Board>,
-    @InjectRepository(User) private userRepository: Repository<User>, */
+
     private usersService: UsersService,
     private boardsService: BoardsService,
   ) {}
@@ -100,4 +98,7 @@ export class TasksService {
     }
     return null;
   }
+}
+function PartialType(CreateCatDto: any) {
+  throw new Error('Function not implemented.');
 }

@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 import fmp from 'fastify-multipart';
 
 import * as dotenv from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ class Platform {
   private async _express() {
     const app = await NestFactory.create(AppModule);
 
+    app.useGlobalPipes(new ValidationPipe());
+
     await app.listen(this.port, () =>
       console.log(`Express server running on port: ${this.port}`),
     );
@@ -37,6 +40,8 @@ class Platform {
     );
 
     await app.register(fmp);
+
+    app.useGlobalPipes(new ValidationPipe());
 
     await app.listen(this.port, '0.0.0.0', () =>
       console.log(`Fastify server running on port: ${this.port}`),

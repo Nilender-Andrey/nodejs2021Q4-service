@@ -1,4 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { AuthModule } from '../auth/auth.module';
 import { FileControllerExpress } from './file.controller.express';
 import { FileControllerFastify } from './file.controller.fastify';
 import { FileService } from './file.service';
@@ -14,6 +15,7 @@ export class FileModule {
           : FileControllerExpress,
       ],
       providers: [FileService],
+      imports: [AuthModule],
     };
   }
 }
