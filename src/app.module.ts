@@ -8,6 +8,8 @@ import { UsersModule } from './resources/users/users.module';
 import dbConfig from './config/db.config';
 import { SeedingDbModule } from './db/seeding_db.module';
 import { FileModule } from './resources/file/file.module';
+import { LoggerModule } from 'nestjs-pino';
+import { loggerConfig } from './config/logger.config';
 
 @Module({
   imports: [
@@ -15,6 +17,9 @@ import { FileModule } from './resources/file/file.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(dbConfig()),
+    LoggerModule.forRoot({
+      pinoHttp: loggerConfig,
+    }),
 
     AuthModule,
     BoardsModule,

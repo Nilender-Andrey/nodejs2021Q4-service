@@ -5,7 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import fmp from 'fastify-multipart';
-
+import { Logger } from 'nestjs-pino';
 import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
 
@@ -26,6 +26,7 @@ class Platform {
   private async _express() {
     const app = await NestFactory.create(AppModule);
 
+    app.useLogger(app.get(Logger));
     app.useGlobalPipes(new ValidationPipe());
 
     await app.listen(this.port, () =>
@@ -40,7 +41,7 @@ class Platform {
     );
 
     await app.register(fmp);
-
+    app.useLogger(app.get(Logger));
     app.useGlobalPipes(new ValidationPipe());
 
     await app.listen(this.port, '0.0.0.0', () =>
