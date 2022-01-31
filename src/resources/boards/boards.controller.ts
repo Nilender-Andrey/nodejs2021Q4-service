@@ -8,6 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { LoggerGuard } from 'src/logger/logger_guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -15,6 +16,7 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Controller('/boards')
 @UseGuards(JwtAuthGuard)
+@UseGuards(LoggerGuard)
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 

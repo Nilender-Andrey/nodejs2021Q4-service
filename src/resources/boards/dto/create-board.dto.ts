@@ -12,7 +12,6 @@ export class CreateBoardDto {
   @IsString()
   title: string;
 
-  @IsOptional()
   @IsArray()
   columns: Columns[];
 }

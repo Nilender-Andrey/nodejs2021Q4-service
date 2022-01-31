@@ -1,49 +1,27 @@
-const SHORT_LOG_CONSOLE: true | false = true;
-const LEVEL_LOGGER = 'info';
-
+const SHORT_LOG_CONSOLE: true | false = true; //! Remove standard response
 const LOG_FILE_NAME = 'log_file/combined.log';
 const ERROR_FILE_NAME = 'log_file/error.log';
 
-export const loggerConfig = {
+export const loggerConfig = (LEVEL_LOGGER: string) => ({
   level: LEVEL_LOGGER,
   quietReqLogger: true,
   timestamp: () =>
-    `,"time":"${new Date(Date.now()).toLocaleDateString('en-GB', {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
+    `,"time":"${new Date(Date.now()).toLocaleDateString('ru-RU', {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric',
     })}"`,
-  serializers: {
-    res: (res) => {
-      return {
-        statusCode: res.statusCode,
-      };
-    },
-    req: (req) => {
-      return {
-        method: req.method,
-        url: req.url,
-        path: req.routerPath,
-        parameters: req.params,
-        query: req.query,
-        body: req.body,
-      };
-    },
-  },
 
   transport: {
     targets: [
       {
         level: LEVEL_LOGGER,
-        target: 'pino/file',
+        target: 'pino-pretty',
         options: SHORT_LOG_CONSOLE
           ? {
               colorize: true,
               hideObject: true,
-              ignore: 'pid,hostname',
+              levelLabel: LEVEL_LOGGER,
             }
           : {
               colorize: true,
@@ -55,7 +33,6 @@ export const loggerConfig = {
         options: {
           destination: LOG_FILE_NAME,
           mkdir: true,
-          ignore: 'msg',
         },
       },
       {
@@ -65,4 +42,4 @@ export const loggerConfig = {
       },
     ],
   },
-};
+});

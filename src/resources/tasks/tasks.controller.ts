@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { LoggerGuard } from 'src/logger/logger_guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -17,6 +18,7 @@ import { TasksService } from './tasks.service';
 
 @Controller('/boards/:boardId/tasks')
 @UseGuards(JwtAuthGuard)
+@UseGuards(LoggerGuard)
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 

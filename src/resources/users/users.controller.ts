@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { LoggerGuard } from 'src/logger/logger_guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,6 +19,7 @@ import { UsersService } from './users.service';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('/users')
 @UseGuards(JwtAuthGuard)
+@UseGuards(LoggerGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

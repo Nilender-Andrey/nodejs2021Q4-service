@@ -18,7 +18,7 @@ import { loggerConfig } from './config/logger.config';
     }),
     TypeOrmModule.forRoot(dbConfig()),
     LoggerModule.forRoot({
-      pinoHttp: loggerConfig,
+      pinoHttp: loggerConfig(process.env.LEVEL_LOGGER),
     }),
 
     AuthModule,

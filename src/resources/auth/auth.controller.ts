@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthorizationDataDto } from './dto/authorization_data.dto';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
