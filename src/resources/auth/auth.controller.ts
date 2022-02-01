@@ -2,8 +2,10 @@ import { Body, Controller, Get, Logger, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthorizationDataDto } from './dto/authorization_data.dto';
 import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+import { LoggerGuard } from 'src/logger/logger.guard';
 
 @Controller('/login')
+@UseGuards(LoggerGuard)
 export class AuthController {
   constructor(
     private authService: AuthService,

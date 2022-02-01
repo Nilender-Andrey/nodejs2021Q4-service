@@ -41,6 +41,7 @@ class Platform {
     );
 
     await app.register(fmp);
+
     app.useLogger(app.get(Logger));
     app.useGlobalPipes(new ValidationPipe());
 

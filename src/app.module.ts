@@ -9,7 +9,7 @@ import dbConfig from './config/db.config';
 import { SeedingDbModule } from './db/seeding_db.module';
 import { FileModule } from './resources/file/file.module';
 import { LoggerModule } from 'nestjs-pino';
-import { loggerConfig } from './config/logger.config';
+import LoggerConfig from './logger/logger.config';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { loggerConfig } from './config/logger.config';
     }),
     TypeOrmModule.forRoot(dbConfig()),
     LoggerModule.forRoot({
-      pinoHttp: loggerConfig(process.env.LEVEL_LOGGER),
+      pinoHttp: new LoggerConfig(process.env.LEVEL_LOGGER).config(),
     }),
 
     AuthModule,

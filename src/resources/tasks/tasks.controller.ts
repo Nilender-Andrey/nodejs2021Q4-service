@@ -10,7 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { LoggerGuard } from 'src/logger/logger_guard';
+import { LoggerGuard } from 'src/logger/logger.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';

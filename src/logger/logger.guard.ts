@@ -10,15 +10,17 @@ export class LoggerGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest();
+
     try {
       const reqId = JSON.stringify(req.id);
+      const method = JSON.stringify(req.method);
       const url = JSON.stringify(req.url);
       const body = JSON.stringify(req.body);
       const params = JSON.stringify(req.params);
       const query = JSON.stringify(req.query);
 
-      this.logger.info(
-        `\nreq: {\n reqId: ${reqId},\n url ${url},\n params: ${params},\n query: ${query},\n body: ${body}\n`,
+      this.logger.debug(
+        `\nreq: {\n reqId: ${reqId},\n method: ${method},\n url ${url},\n params: ${params},\n query: ${query},\n body: ${body}}\n`,
       );
 
       return true;

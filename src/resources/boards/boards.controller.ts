@@ -3,12 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { LoggerGuard } from 'src/logger/logger_guard';
+import { LoggerGuard } from 'src/logger/logger.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';

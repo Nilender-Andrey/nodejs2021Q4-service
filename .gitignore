@@ -36,3 +36,7 @@ lerna-debug.log*
 
 # log files
 log_file
+
+#load_test
+report.json.html
+report.json

@@ -61,7 +61,7 @@ export class BoardsService {
       relations: ['columns'],
     });
 
-    return board;
+    return { ...board };
   }
 
   async changeBoard(boardId: string, updateBoardDto: UpdateBoardDto) {
