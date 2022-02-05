@@ -1,3 +1,15 @@
+**Информация для проверки задания NestJS**
+1. Клонируйте сборку `https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
+2. Перейдите в ветку Task-10.-NestJS `git checkout Task-10.-NestJS`
+3. Запустите приложение через doker командой `npm run start:docker_db`
+4. Тесты можно запустить двумя способами:
+   a) в том-же терминале командой `npm run test:auth` 
+   б) в докер контейнере
+
+
+
+**Fastify vs. Express**
+----
 <table>
            <tr>
               <td>
