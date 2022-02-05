@@ -34,7 +34,9 @@ export class BoardsService {
         ? board
         : {
             ...board,
-            columns: board.columns?.map((item) => ({ ...item })),
+            columns: board.columns
+              ?.map((item) => ({ ...item }))
+              .sort((a, b) => a.order - b.order),
           };
 
     return result;
@@ -73,8 +75,9 @@ export class BoardsService {
       throw new NotFoundException(`Board id: ${boardId} is not found`);
 
     board.title = updateBoardDto.title || board.title;
-    await this.boardRepository.save(board);
-    return board;
+
+    const updatedBoard = await this.boardRepository.save(board);
+    return updatedBoard;
   }
 
   async deleteBoard(boardId: string) {

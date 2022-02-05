@@ -12,7 +12,9 @@ import { FileService } from './file.service';
 
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Files')
 @Controller('/file')
 //@UseGuards(JwtAuthGuard)
 export class FileControllerExpress {

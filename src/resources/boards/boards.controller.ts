@@ -3,21 +3,25 @@ import {
   Controller,
   Delete,
   Get,
-  Header,
   Param,
   Post,
   Put,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { TypeOrmFilter } from 'src/Exceptions/typeOrm.exception';
 import { LoggerGuard } from 'src/logger/logger.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 
+@ApiTags('Boards')
 @Controller('/boards')
 @UseGuards(JwtAuthGuard)
 @UseGuards(LoggerGuard)
+@UseFilters(TypeOrmFilter)
 export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 

@@ -7,18 +7,18 @@ config:
   environments:
     load:
       http:
-        timeout: 10
+        timeout: 15
       phases:
-        # - duration: 10
-        #   arrivalRate: 5
-        #   name: Warm up
         - duration: 10
+          arrivalRate: 5
+          name: Warm up
+        - duration: 20
           arrivalRate: 50
-          # rampTo: 100
+          rampTo: 100
           name: Ramp up load
-        # - duration: 30
-        #   arrivalRate: 50
-        #   name: Sustained load
+        - duration: 40
+          arrivalRate: 50
+          name: Sustained load
 
     functional:
       plugins:

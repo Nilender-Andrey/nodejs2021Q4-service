@@ -8,6 +8,7 @@ import fmp from 'fastify-multipart';
 import { Logger } from 'nestjs-pino';
 import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
+import swaggerConfig from './config/swagger.config';
 
 dotenv.config();
 
@@ -29,6 +30,8 @@ class Platform {
     app.useLogger(app.get(Logger));
     app.useGlobalPipes(new ValidationPipe());
 
+    swaggerConfig(app);
+
     await app.listen(this.port, () =>
       console.log(`Express server running on port: ${this.port}`),
     );
@@ -44,6 +47,8 @@ class Platform {
 
     app.useLogger(app.get(Logger));
     app.useGlobalPipes(new ValidationPipe());
+
+    swaggerConfig(app);
 
     await app.listen(this.port, '0.0.0.0', () =>
       console.log(`Fastify server running on port: ${this.port}`),

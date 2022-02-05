@@ -43,9 +43,9 @@ export class UsersService {
     newUser.login = createUserDto.login;
     newUser.password = await bcrypt.hash(createUserDto.password, 10);
 
-    await this.userRepository.save(newUser);
+    const user = await this.userRepository.save(newUser);
 
-    return newUser;
+    return user;
   }
 
   async changeUser(userId: string, updateUserDto: UpdateUserDto) {
@@ -57,11 +57,9 @@ export class UsersService {
       ? await await bcrypt.hash(updateUserDto.password, 10)
       : user.password;
 
-    await this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
 
-    user = await this.getOneUser(userId);
-
-    return user;
+    return updatedUser;
   }
 
   async deleteUser(userId: string) {

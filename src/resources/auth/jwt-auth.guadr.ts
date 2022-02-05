@@ -6,10 +6,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
+import { PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private readonly logger: PinoLogger,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
@@ -27,6 +31,11 @@ export class JwtAuthGuard implements CanActivate {
       req.user = user;
       return true;
     } catch (error) {
+      const reqId = JSON.stringify(req.id);
+
+      this.logger.warn(
+        `\nres: {\n reqId: ${reqId}, \n statusCode: "401",\n message: "User not authorized"\n}`,
+      );
       throw new UnauthorizedException({ message: 'User not authorized' });
     }
   }

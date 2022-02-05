@@ -75,9 +75,9 @@ export class TasksService {
     task.columnId = columnId || task.columnId;
     task.user = user;
 
-    await this.taskRepository.save(task);
+    const updatedTask = await this.taskRepository.save(task);
 
-    return task;
+    return updatedTask;
   }
 
   async deleteTask(boardId: string, taskId: string) {
@@ -98,7 +98,4 @@ export class TasksService {
     }
     return null;
   }
-}
-function PartialType(CreateCatDto: any) {
-  throw new Error('Function not implemented.');
 }

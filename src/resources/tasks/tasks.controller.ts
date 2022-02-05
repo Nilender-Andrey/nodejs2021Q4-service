@@ -7,18 +7,23 @@ import {
   Param,
   Post,
   Put,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { TypeOrmFilter } from 'src/Exceptions/typeOrm.exception';
 import { LoggerGuard } from 'src/logger/logger.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksService } from './tasks.service';
 
+@ApiTags('Tasks')
 @Controller('/boards/:boardId/tasks')
 @UseGuards(JwtAuthGuard)
 @UseGuards(LoggerGuard)
+@UseFilters(TypeOrmFilter)
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 

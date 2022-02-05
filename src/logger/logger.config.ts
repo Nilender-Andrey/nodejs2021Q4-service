@@ -19,7 +19,7 @@ class LoggerConfig {
       enabled: LOGGER_ON_OFF,
       autoLogging: AUTO_LOGGING_ON_OFF,
       quietReqLogger: true,
-      timestamp: this.timestamp(),
+      timestamp: () => this.timestamp(),
       transport: this.transport(),
     };
   }

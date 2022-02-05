@@ -34,7 +34,7 @@ export class FileService {
     res: fastify.FastifyReply,
   ) {
     const data = await req.file();
-
+    console.log(data);
     pipeline(
       data.file,
       fs.createWriteStream(`uploads/${data.filename}`),

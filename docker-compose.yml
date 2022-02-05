@@ -1,6 +1,25 @@
 version: '3.8'
 
 services:
+  server:
+    build: .
+    image: server:nest__node_v16.13
+    container_name: NestJS
+    restart: always
+    volumes:
+      - ./src:/app/src
+      - ./log_file:/app/log_file
+      - ./uploads:/app/uploads
+      - ./node_modules:/app/node_modules
+
+    # network_mode: host
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      FLASK_ENV: ${NODE_ENV}
+
   postgres:
     image: 'postgres:v${POSTGRES_VERSION}'
     container_name: postgres
@@ -8,6 +27,7 @@ services:
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
+
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -17,3 +37,5 @@ services:
 
 volumes:
   db_data:
+  logs:
+  files:

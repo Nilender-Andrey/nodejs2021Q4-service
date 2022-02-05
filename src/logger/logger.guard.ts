@@ -20,7 +20,7 @@ export class LoggerGuard implements CanActivate {
       const query = JSON.stringify(req.query);
 
       this.logger.debug(
-        `\nreq: {\n reqId: ${reqId},\n method: ${method},\n url ${url},\n params: ${params},\n query: ${query},\n body: ${body}}\n`,
+        `\nreq: {\n reqId: ${reqId},\n method: ${method},\n url ${url},\n params: ${params},\n query: ${query},\n body: ${body}\n}\n`,
       );
 
       return true;
