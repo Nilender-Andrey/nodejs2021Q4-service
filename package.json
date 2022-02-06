@@ -24,8 +24,9 @@
     "migration:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli --config src/config/ormConfig.ts migration:revert",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
-    "start:docker_db": "docker-compose up",
-    "stop:docker_db": "docker-compose down --volume"
+    "db": "docker-compose up -f docker-compose.db.yml",
+    "start:docker": "docker-compose up --build",
+    "stop:docker": "docker-compose postgres"
   },
   "dependencies": {
     "-": "^0.0.1",
@@ -36,7 +37,6 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/platform-fastify": "^8.2.6",
-    "@nestjs/swagger": "^5.2.0",
     "@nestjs/typeorm": "^8.0.3",
     "@types/multer": "^1.4.7",
     "bcryptjs": "^2.4.3",
@@ -45,7 +45,6 @@
     "cross-env": "^7.0.3",
     "dotenv": "^14.2.0",
     "fastify-multipart": "^5.3.0",
-    "fastify-swagger": "^4.13.1",
     "nestjs-pino": "^2.5.0",
     "pg": "^8.7.1",
     "pino-http": "^6.6.0",
@@ -53,7 +52,6 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.41",
     "yamljs": "^0.3.0"
   },

@@ -4,7 +4,7 @@ services:
   server:
     build: .
     image: server:nest__node_v16.13
-    container_name: NestJS
+    container_name: nest_js
     restart: always
     volumes:
       - ./src:/app/src
