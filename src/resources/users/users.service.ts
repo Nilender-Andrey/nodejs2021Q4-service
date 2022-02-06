@@ -33,7 +33,7 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto) {
-    let applicant = await this.getLoginUser(createUserDto.login);
+    const applicant = await this.getLoginUser(createUserDto.login);
 
     if (applicant)
       throw new HttpException('Login busy', HttpStatus.BAD_REQUEST);
@@ -49,7 +49,7 @@ export class UsersService {
   }
 
   async changeUser(userId: string, updateUserDto: UpdateUserDto) {
-    let user = await this.getOneUser(userId);
+    const user = await this.getOneUser(userId);
 
     user.name = updateUserDto.name || user.name;
     user.login = updateUserDto.login || user.login;

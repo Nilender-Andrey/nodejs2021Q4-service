@@ -5,13 +5,10 @@ import {
   Post,
   Res,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileService } from './file.service';
-
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Files')

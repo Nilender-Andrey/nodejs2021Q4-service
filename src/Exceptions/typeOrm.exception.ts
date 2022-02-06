@@ -9,7 +9,7 @@ import { TypeORMError } from 'typeorm';
 @Catch(TypeORMError)
 export class TypeOrmFilter implements ExceptionFilter {
   catch(exception: TypeORMError, host: ArgumentsHost) {
-    let message: string = exception.message;
+    const message: string = exception.message;
 
     const customResponse = {
       statusCode: HttpStatus.BAD_REQUEST,

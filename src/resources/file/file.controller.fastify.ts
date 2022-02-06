@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { FileService } from './file.service';
 import * as fastify from 'fastify';
-import { JwtAuthGuard } from '../auth/jwt-auth.guadr';
 
 @Controller('/file')
 //@UseGuards(JwtAuthGuard)

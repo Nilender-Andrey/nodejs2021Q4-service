@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsEmpty,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 import Columns from 'src/resources/column/column.model';
 
 export class CreateBoardDto {
