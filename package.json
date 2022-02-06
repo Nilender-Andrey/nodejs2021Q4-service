@@ -26,7 +26,7 @@
     "test:auth": "cross-env DEBUG=rs:* TEST_MODE=auth jest --noStackTrace",
     "db": "docker-compose up -f docker-compose.db.yml",
     "start:docker": "docker-compose up --build",
-    "stop:docker": "docker-compose postgres"
+    "stop:docker": "docker-compose down --volume"
   },
   "dependencies": {
     "-": "^0.0.1",
