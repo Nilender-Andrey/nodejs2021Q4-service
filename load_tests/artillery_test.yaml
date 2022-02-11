@@ -1,0 +1,121 @@
+#artillery run --environment functional ./load_tests/artillery_test.yaml
+#artillery run --output report.json --environment load ./load_tests/artillery_test.yaml
+
+config:
+  target: "http://localhost:4000"
+
+  environments:
+    load:
+      http:
+        timeout: 15
+      phases:
+        - duration: 10
+          arrivalRate: 5
+          name: Warm up
+        - duration: 20
+          arrivalRate: 50
+          rampTo: 100
+          name: Ramp up load
+        - duration: 40
+          arrivalRate: 50
+          name: Sustained load
+
+    functional:
+      plugins:
+        expect: {}
+      phases:
+        - duration: 1
+          arrivalCount: 1
+          name: Functional test
+
+before:
+  flow:
+    - log: "Get auth token"
+    - post:
+        url: "/login"
+        json:
+          login: "admin"
+          password: "admin"
+        capture:
+          - json: $.token
+            as: token
+
+scenarios:
+  - flow:
+      - get:
+          url: "/boards"
+          headers:
+            authorization: "Bearer {{ token }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      - post:
+          url: "/boards"
+          headers:
+            authorization: "Bearer {{ token }}"
+          json:
+            {
+              title: "Test_1",
+              columns:
+                [{ title: "test_1", order: 1 }, { title: "test_1", order: 2 }],
+            }
+          capture:
+            - json: $.id
+              as: boardId
+          expect:
+            - statusCode: 201
+            - contentType: json
+
+      - get:
+          url: "/boards/{{ boardId }}"
+          headers:
+            authorization: "Bearer {{ token }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+      - put:
+          url: "/boards/{{ boardId }}"
+          headers:
+            authorization: "Bearer {{ token }}"
+          json:
+            {
+              title: "Test_2",
+              columns:
+                [{ title: "test_2", order: 1 }, { title: "test_2", order: 2 }],
+            }
+          capture:
+            - json: "$.title"
+              as: title
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - equals:
+                - "Test_2"
+                - "{{ title }}"
+
+      - get:
+          url: "/boards/{{ boardId }}"
+          headers:
+            authorization: "Bearer {{ token }}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - equals:
+                - "Test_2"
+                - "{{ title }}"
+
+      - delete:
+          url: "/boards/{{ boardId }}"
+          headers:
+            authorization: "Bearer {{ token }}"
+          capture:
+            - json: $.message
+              as: message
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - equals:
+                - "Board id:{{ boardId }} has been removed"
+                - "{{ message }}"

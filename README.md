@@ -1,72 +1,201 @@
-# RS School REST service
+**Информация для проверки задания NestJS**
 
-## Prerequisites
+Добрый день!
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+1. Клонируйте сборку `https://github.com/Nilender-Andrey/nodejs2021Q4-service.git`
+2. Перейдите в ветку "Task-10.-NestJS" `git checkout Task-10.-NestJS`
+3. Установите зависимости `npm i`
+4. Запустите приложение через "doker" командой `npm run start:docker`
+   Дождитесь загрузки приложения (!стартует иногда довольно долго!)
+5. Тесты можно запустить двумя способами:   
+   a) открыть еще один терминал и ввести команду `npm run test:auth`   
+   б) открыть CLI контейнера и ввести команду `npm run test:auth`   
+6. Остановить приложение и удалить все "volume" командой `npm run stop:docker`
 
-## Downloading
+Собирал и проверил на Windows 10 x64
 
-```
-git clone {repository URL}
-```
+**!!! В случае проблем с запуском приложения в docker можно попробовать следующий альтернативный сценарий:**
 
-## Installing NPM modules
+1. Установить зависимости для приложения локально `npm i`
+2. В файле .env поменять `POSTGRES_HOST=postgres` на `POSTGRES_HOST=localhost`
+3. Запустить только базу данных командой `npm run db`
+4. Запустить приложение локально командой `start:dev`  
+   Дождаться запуска...
+5. Открыть еще один терминал и запустить тесты командой `npm run test:auth`
 
-```
-npm install
-```
+## **Fastify vs. Express**
 
-## Running application
-
-```
-npm start
-```
-
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm test
-```
-
-To run only one of all test suites (users, boards or tasks)
-
-```
-npm test <suite name>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization (users, boards or tasks)
-
-```
-npm run test:auth <suite name>
-```
-
-## Development
-
-If you're using VSCode, you can get a better developer experience from integration with [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions.
-
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+<table>
+           <tr>
+              <td>
+                <table>
+                  <tr>
+                    <th colspan="2">Fastify</th>
+                  </tr>
+                  <tr>
+                    <td>http.codes.200:</td>
+                    <td>2000</td>
+                  </tr>
+                  <tr>
+                    <td>http.codes.201:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>http.request_rate:</td>
+                    <td>80/sec</td>
+                  </tr>
+                  <tr>
+                    <td>http.requests:</td>
+                    <td>2400</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">http.response_time:</td>
+                  </tr>
+                  <tr>
+                    <td>min:</td>
+                    <td>22</td>
+                  </tr>
+                  <tr>
+                    <td>max:</td>
+                    <td>9519</td>
+                  </tr>
+                  <tr>
+                    <td>median:</td>
+                    <td>2836.2</td>
+                  </tr>
+                  <tr>
+                    <td>p95:</td>
+                    <td>9230.4</td>
+                  </tr>
+                  <tr>
+                    <td>p99:</td>
+                    <td>9416.8</td>
+                  </tr>
+                  <tr>
+                    <td>http.responses:</td>
+                    <td>2400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.completed:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.created:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.created_by_name.0:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">vusers.session_length:</td>
+                  </tr>
+                  <tr>
+                    <td>min:</td>
+                    <td>8936.6</td>
+                  </tr>
+                  <tr>
+                    <td>max:</td>
+                    <td>25309.8</td>
+                  </tr>
+                  <tr>
+                    <td>median:</td>
+                    <td>23630.3</td>
+                  </tr>
+                  <tr>
+                    <td>p95:</td>
+                    <td>25091.6</td>
+                  </tr>
+                  <tr>
+                    <td>p99:</td>
+                    <td>25091.6</td>
+                  </tr>
+                </table>
+              </td>
+              <td>
+                <table>
+                  <tr>
+                    <th colspan="2">Express</th>
+                  </tr>
+                  <tr>
+                    <td>http.codes.200:</td>
+                    <td>2000</td>
+                  </tr>
+                  <tr>
+                    <td>http.codes.201:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>http.request_rate:</td>
+                    <td>80/sec</td>
+                  </tr>
+                  <tr>
+                    <td>http.requests:</td>
+                    <td>2400</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">http.response_time:</td>
+                  </tr>
+                  <tr>
+                    <td>min:</td>
+                    <td>35</td>
+                  </tr>
+                  <tr>
+                    <td>max:</td>
+                    <td>9704</td>
+                  </tr>
+                  <tr>
+                    <td>median:</td>
+                    <td>3011.6</td>
+                  </tr>
+                  <tr>
+                    <td>p95:</td>
+                    <td>9416.8</td>
+                  </tr>
+                  <tr>
+                    <td>p99:</td>
+                    <td>9607.1</td>
+                  </tr>
+                  <tr>
+                    <td>http.responses:</td>
+                    <td>2400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.completed:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.created:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td>vusers.created_by_name.0:</td>
+                    <td>400</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">vusers.session_length:</td>
+                  </tr>
+                  <tr>
+                    <td>min:</td>
+                    <td>13760.4</td>
+                  </tr>
+                  <tr>
+                    <td>max:</td>
+                    <td>26641.7</td>
+                  </tr>
+                  <tr>
+                    <td>median:</td>
+                    <td>25091.6</td>
+                  </tr>
+                  <tr>
+                    <td>p95:</td>
+                    <td>26643.2</td>
+                  </tr>
+                  <tr>
+                    <td>p99:</td>
+                    <td>26643.2</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
